@@ -17,3 +17,4 @@ Kirjsten Blodgett & Jonathan Zhu
 USER INSTRUCTIONS:
 Be sure to put the file into the file location of the project. 
 It will not be able to read it unless you type the full file location.
+(I used BlueJ to create/compile, Language is Java)
