@@ -1,0 +1,130 @@
+/**
+ * Read in the CSV file from device, prints out file in nice labeled format, and creates CSV file with only HR, time, and vector magnitude.
+ * Some things are commented out
+ * @author Kirjsten Blodgett 
+ * @version 1.0
+ * email: catsanddogskb@hotmail.com
+ */
+import java.io.*;
+import java.util.Scanner;
+import java.util.*;
+public class ReadIn   
+{
+    private Scanner reader;
+    private Scanner keyboard = new Scanner(System.in);
+    private PrintWriter writer = new PrintWriter( new FileWriter("tremorData.csv"));
+    private List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
+    
+   /**
+     * Constructor for objects of class ReadIn
+     */
+    public ReadIn() throws IOException
+    {
+        String input;
+        String ans="no";
+        
+        do{
+            try{
+                    System.out.println("Enter file location and name");
+                    System.out.println("OR drag file in tremor program folder and enter (NAME).(FILETYPE)");
+                    input = keyboard.nextLine();//wha??
+                    reader = new Scanner(new File(input));
+                }catch(IOException e)
+                {
+                    System.out.println("File was not found, try again?");
+                    ans = keyboard.next();
+                }
+        }while(ans.equalsIgnoreCase("yes"));
+    }
+
+    /**
+     * reads in and makes DataPerMin object
+     */
+    public void read()
+    {
+        String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay;
+        int HR;
+        double vec;
+        
+        for(int i = 0; i < 13; i++)
+        {
+            reader.nextLine();
+        }
+        
+        System.out.println("Would you like to see the raw data from the file?");
+        String ans = keyboard.next();
+        if(ans.equalsIgnoreCase("yes"))
+        {printHeader();}
+        writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
+        while(reader.hasNextLine())
+        {
+            String input = reader.nextLine();
+            String[] textArray = input.split("[, ]+");
+        
+            date = textArray[0];
+            time = textArray[1];
+            axis1 = textArray[2];
+            axis2 = textArray[3];
+            axis3 = textArray[4];
+            steps = textArray[5];
+            HR = Integer.parseInt(textArray[6]);
+            lux = textArray[7];
+            iOff = textArray[8];
+            iStand = textArray[9];
+            iSit =  textArray[10];
+            iLay = textArray[11];
+            vec = Double.parseDouble(textArray[12]);
+            
+            //what am i doing wrong???
+            writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
+            DataPerMin dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec);
+            dataPerMinArray.add(dataPerMin);
+            if(ans.equalsIgnoreCase("yes"))
+            {print(dataPerMin);}
+        }
+        reader.close();
+        writer.close();
+        
+    }
+    
+    /**
+     * prints out object created in read()
+     * 
+     * @param o
+     */
+    public void print(DataPerMin o)
+    {
+        
+        System.out.printf("%-10s %-10s %-5s %-5s %-5s %-5s %-5s %-5s %-12s %-12s %-12s %-12s %-8s %n", o.date(), o.time(), o.axis1(), o.axis2(), o.axis3(), o.steps(), o.HR(), o.lux(), o.iOff(), o.iStand(), o.iSit(), o.iLay(), o.vec());
+       
+    }
+    
+    /**
+     * 
+     */
+    public void printHeader()
+    {
+        System.out.printf("%-10s %-10s %-5s %-5s %-5s %-5s %-5s %-5s %-12s %-12s %-12s %-12s %-8s %n","Date", "Time", "Axis1", "Axis2", "Axis3", "Steps", "HR", "Lux", "Inc-Off", "Inc-Stand", "Inc-Sit", "Inclin-Lying", "Vector");
+    }
+    
+    /**
+     * Returns the filtered array to the driver (filtered to take out data that are outliers or not applicable)
+     */
+    public List dataPerMinArray()
+    {
+        /**
+        if(dataPerMinArray.isEmpty())
+        {
+            System.out.println("DataPerMin Array is Empty");
+        }else
+        {
+            System.out.println("DataPerMinArray is not empty");
+            for(int i = 0; dataPerMinArray.size() > i; i++)
+            {       DataPerMin datapermin = (DataPerMin) dataPerMinArray.get(i);
+                    System.out.println(datapermin.HR());
+            }
+        }
+        */
+        return dataPerMinArray;
+    }
+}
