@@ -1,0 +1,90 @@
+/**
+ * TremorCount: counts the number of tremors in a set amount of time (so far only a day)
+ * 
+ * @author Kirjsten Blodgett
+ * @version 1.0
+ */
+import java.util.*;
+public class TremorCount
+{
+    // instance variables - replace the example below with your own
+    private ArrayList<Tremor> tremors = new ArrayList<Tremor>();
+    private ArrayList<ArrayList> tremPerDay = new ArrayList<ArrayList>();
+    private int f;
+        
+    /**
+     * Constructor for objects of class TremorCount
+     */
+    public TremorCount(ArrayList trems)
+    {
+        tremors = trems;
+    }
+    
+    /**
+     * Constructor for objects of class TremorCount
+     */
+    public TremorCount()
+    {
+    }
+    
+    /**
+     * method to split date into ints
+     */
+    private void dateSplit()
+    {
+        for(int i = 0; tremors.size()>i; i++)
+        {
+            Tremor trem = (Tremor)tremors.get(i);
+            trem.splitDate();
+            tremors.set(i, trem);
+        }
+    }
+
+    /**
+     * An example of a method - replace this comment with your own
+     * 
+     */
+    public void tremPerDay()
+    {
+        ArrayList<Tremor> temp = new ArrayList<Tremor>();
+        dateSplit();
+        int count = 0;
+        while(count++ <= 31)
+        {
+            for(int i =0; tremors.size()> i; i++)
+            {
+                Tremor trem = (Tremor)tremors.get(i);
+                if(trem.day()==count)
+                {
+                    temp.add(trem);
+                }
+            }
+            tremPerDay.add(temp);
+        }
+        printTremsPerDay();
+    }
+    
+    /**
+     * prints out how many tremors per day
+     */
+    private void printTremsPerDay()
+    {
+        System.out.println("Tremors Per Day");
+        int total=0;
+        double average=0.00;
+        for(int i = 0; tremPerDay.size()>i; i++)
+        {
+            ArrayList<Tremor> temp = tremPerDay.get(i);
+            Tremor tempTrem = null;
+            if(temp.size()>0)
+            {tempTrem = temp.get(0);}
+            String date = tempTrem.date();
+            total += temp.size();
+            System.out.println(date +": "+ temp.size());
+
+        }
+        if(total!=0)
+        {average = (total/tremPerDay.size());}
+        System.out.println("Average: "+average);
+    }
+}
