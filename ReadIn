@@ -11,6 +11,7 @@ import java.util.*;
 public class ReadIn   
 {
     private Scanner reader;
+    private Scanner reader;
     private Scanner keyboard = new Scanner(System.in);
     private PrintWriter writer = new PrintWriter( new FileWriter("tremorData.csv"));
     private List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
@@ -27,7 +28,7 @@ public class ReadIn
             try{
                     System.out.println("Enter file location and name");
                     System.out.println("OR drag file in tremor program folder and enter (NAME).(FILETYPE)");
-                    input = keyboard.nextLine();//wha??
+                    input = keyboard.nextLine();
                     reader = new Scanner(new File(input));
                 }catch(IOException e)
                 {
@@ -35,6 +36,13 @@ public class ReadIn
                     ans = keyboard.next();
                 }
         }while(ans.equalsIgnoreCase("yes"));
+        
+        System.out.println("End program??");
+        ans = keyboard.next();
+        if(ans.equalsIgnoreCase("yes"))
+        {
+            System.exit(0);
+        }
     }
 
     /**
@@ -60,7 +68,7 @@ public class ReadIn
         {
             String input = reader.nextLine();
             String[] textArray = input.split("[, ]+");
-        
+            
             date = textArray[0];
             time = textArray[1];
             axis1 = textArray[2];
@@ -71,9 +79,12 @@ public class ReadIn
             lux = textArray[7];
             iOff = textArray[8];
             iStand = textArray[9];
-            iSit =  textArray[10];
-            iLay = textArray[11];
-            vec = Double.parseDouble(textArray[12]);
+            if(textArray.length>10)
+            {iSit =  textArray[10];}else iSit= "N/A";
+            if(textArray.length>11)
+            {iLay = textArray[11];}else iLay = "N/A";
+            if(textArray.length>12)
+            {vec = Double.parseDouble(textArray[12]);} else vec=0;
             
             //what am i doing wrong???
             writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
