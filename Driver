@@ -13,33 +13,31 @@ public class Driver
     public static void main(String[] args) throws IOException
     {
     
-        //this array holds informtion from the device. The device outputs every min or every sec.
         List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
         ReadIn readIn = new ReadIn();
         
-        //Reads in the file from the device(csv format) and categorizes each min into an intensity
         readIn.read();
         dataPerMinArray = readIn.dataPerMinArray();
-        Tremor tremor = new Tremor(dataPerMinArray);
+        TremorEvaluation tremor = new TremorEvaluation(dataPerMinArray);
+        tremor.mins();
         tremor.categorize();
         
-        //once it has been catergorized it is sent to either low/med/high class to print
-        //low and high intensity classes finds the least intenst and the most intense of the tremor mins/secs organized
-        LowIntense lowIntense = new LowIntense(tremor.lowIntense());
-        lowIntense.print();
-        MedIntense medIntense = new MedIntense(tremor.medIntense());
-        medIntense.print();
-        HighIntense highIntense = new HighIntense(tremor.highIntense());
-        highIntense.print();
+        //LowIntense lowIntense = new LowIntense(tremor.lowIntense());
+        //lowIntense.print();
+        //MedIntense medIntense = new MedIntense(tremor.medIntense());
+        //medIntense.print();
+        //HighIntense highIntense = new HighIntense(tremor.highIntense());
+        //highIntense.print();
         
-        //This prints out stats about the tremors: lowest/highest results and the means
+        
+        LowIntense lowIntense = new LowIntense(tremor.tremList());
+        HighIntense highIntense = new HighIntense(tremor.tremList());
         lowIntense.lowest();
         highIntense.highest();
         tremor.HRMean();
         tremor.vecMean();
-        
-        //This is an attempt to target specific tremors and find stats about those
-        tremor.mins();
+        TremorCount tremCount = new TremorCount(tremor.tremList());
+        tremCount.tremPerDay();
         
     }
 }
