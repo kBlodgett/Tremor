@@ -10,7 +10,8 @@ import java.util.Scanner;
 import java.util.*;
 public class LowIntense
 {
-    private List<DataPerMin>  lowTremor = new ArrayList<DataPerMin>();
+     //private List<DataPerMin>  lowTremor = new ArrayList<DataPerMin>();
+    private List<Tremor>  lowTremor = new ArrayList<Tremor>();
     private double vec = 999999999;
     private int HR = 999;
 
@@ -27,31 +28,43 @@ public class LowIntense
      */
     public void lowest()
     {
-        DataPerMin low;
+        Tremor low;
+        String HRdate = "0", HRtime = "0", vecDate = "0", vecTime = "0";
         for(int i = 0; lowTremor.size() > i; i++)
         {
-            low = (DataPerMin) lowTremor.get(i);
-            if(low.HR() < HR)
-            {HR = low.HR();}
+            low = (Tremor) lowTremor.get(i);
+            if(low.maxHR() < HR)
+            {HR = low.maxHR();
+             HRdate = low.date();
+             HRtime = low.startTime()+"-"+low.endTime();
+            }
             
-            if(low.vec() < vec)
-            {vec = low.vec();}
+            if(low.maxVec() < vec)
+            {vec = low.maxVec();
+             vecDate = low.date();
+             vecTime = low.startTime()+"-"+low.endTime();
+            }
         }
         
         System.out.println(" ");
         System.out.println("Stats");
-        System.out.println("Lowest: (Given the thresh hold: HR - 100    Vector Magnitude - 3500)");
+        System.out.println("Lowest:");
         if((HR < 999)&&(vec < 999999))
-        {   System.out.println("    HR - " + HR);
-            System.out.println("    Vector Magnitude - " + vec);
+        {   System.out.println("    HR: " + HR);
+            System.out.println("        Date:" + HRdate);
+            System.out.println("        Time:" + HRtime);
+            System.out.println("    Vector Magnitude: " + vec);
+            System.out.println("        Date:" + vecDate);
+            System.out.println("        Time:" + vecTime);
         }else
         {
         }
     }
+  
 
     /**
      * prints out the array list of lowest intensity tremors
-     */
+     *
     public void print()
     {
         DataPerMin low;
@@ -64,4 +77,5 @@ public class LowIntense
         }
         
     }
+    */
 }
