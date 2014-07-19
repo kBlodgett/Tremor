@@ -1,0 +1,379 @@
+/**
+ * class Tremor: This classs is to help determine what a tremor is. these objects will be reviewed again
+ * in the other classes labeled lowintense, medintense, and high intense to determine just how intense a 
+ * tremor is.
+ * 
+ * @author Kirjsten Blodgett
+ * @version 1.0
+ * email: catsanddogskb@hotmail.com
+ */
+import java.util.*;
+public class TremorEvaluation
+{
+    // instance variables - replace the example below with your own
+    Scanner keyboard = new Scanner(System.in);
+    private List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
+    private ArrayList<Tremor> tremList= new ArrayList<Tremor>();
+    private List<DataPerMin>  trems = new ArrayList<DataPerMin>();
+    //private List<DataPerMin>  lowIntense = new ArrayList<DataPerMin>();
+    //private List<DataPerMin>  highIntense = new ArrayList<DataPerMin>();
+    //private List<DataPerMin>  medIntense = new ArrayList<DataPerMin>();
+    //private List<DataPerMin> mins = new ArrayList<DataPerMin>();
+    private ArrayList<ArrayList> tremmors = new ArrayList<ArrayList>();
+    
+    private String timeStart, timeEnd;
+    private int HR=0; // lowestHR = 100, highestHR = 0;
+    private double vec=0;
+    private int inputStart, inputEnd;
+    private double vecInput;
+    /**
+     * Constructor for objects of class Tremor
+     */
+    public TremorEvaluation(List tremors)
+    {
+        dataPerMinArray = tremors;
+    }
+
+    /**
+     * Determines tremor through heart rate and vec-mag intensity
+     */
+    public void categorize()
+    {
+
+        for(int i = 0; tremList.size() > i; i++)
+        {
+            Tremor tremorObject = (Tremor) tremList.get(i);
+            if(tremorObject.maxHR() > 100)
+            {
+                if(tremorObject.maxHR() > HR)
+                {
+                    HR = tremorObject.maxHR();
+                }
+                if(tremorObject.maxVec() > vec)
+                {
+                    vec = tremorObject.maxVec();
+                }
+            }
+            //labeling the intensity of the tremor recorded. Making it into a seperate tremor object and adding to tremor array
+           if((tremorObject.maxHR() > 100) && (HR !=0) && (vec != 0))
+           {
+               if(tremorObject.maxVec() >= 8000)
+               {
+                  tremorObject.setIntensity("High");
+                  tremList.set(i, tremorObject);
+               }else if((tremorObject.maxVec() >= 6000) &&(tremorObject.maxVec() < 8000))
+               {
+                   tremorObject.setIntensity("Medium");
+                  tremList.set(i, tremorObject);              
+               }else if((tremorObject.maxVec() > 3500) && (tremorObject.maxVec() < 6000))
+               { 
+                   tremorObject.setIntensity("Low");
+                  tremList.set(i, tremorObject);           
+               }
+               
+               HR = 0;
+               vec = 0;
+           }
+        }
+        
+    }
+    
+    
+    /**
+     * prints mean of HR
+     */
+    public void HRMean()
+    {   int hr=0;
+        int count=0;
+        //previous threshold was 100
+        for(int i=0; dataPerMinArray.size() > i ; i++ )
+        {
+            DataPerMin dataPerMin = (DataPerMin) dataPerMinArray.get(i);
+            if(dataPerMin.HR() > inputStart)
+            {
+                hr += dataPerMin.HR();
+                count++;
+            }
+        }
+        if(hr != 0)
+        {hr = hr/count;}
+        System.out.println("");
+        System.out.println("Mean:");
+        System.out.println("    HR - " + hr);
+    }
+    
+    /**
+     * prints mean of Vector-Magnitude
+     */
+    public void vecMean()
+    {   
+        double mean=0;
+        int count=0;
+        //previous threshold was 3500
+        for(int i=0; dataPerMinArray.size() > i ; i++ )
+        {
+            DataPerMin dataPerMin = (DataPerMin) dataPerMinArray.get(i);
+            if(dataPerMin.vec() > vecInput)
+            {
+                mean += dataPerMin.vec();
+                count++;
+            }
+        }
+        if(mean !=0)
+        {mean = mean/count;}
+        System.out.println("    Vector Magnitude - " + mean);
+    }
+    
+    /**
+     * calculates when a tremor begins and ends. Puts the data that falls during the tremor is put in a seperate array.
+     * then that array is the placed into another array
+     */
+    public void mins()
+    {
+        //List<DataPerMin> mins = new ArrayList<DataPerMin>();
+        int count = 0;
+        int tremCount = 0;
+        int maxHR=0;
+        double maxVec=0;
+        System.out.println(" ");
+        System.out.println("Tremors");
+        ArrayList<DataPerMin>  duringTrems = new ArrayList<DataPerMin>();
+        
+        System.out.println("This is method mins() in TremorEvaluation class.");
+        System.out.println("Threshold for heart rate when tremor is starting?");
+        inputStart = keyboard.nextInt();
+        System.out.println("Threshold for heart rate when tremor is ending?");
+        inputEnd = keyboard.nextInt();
+        System.out.println("Threshold for the vector magnitude during tremor?");
+        vecInput = keyboard.nextDouble();
+        for(int i =0; dataPerMinArray.size()>i; i++)
+        {
+            if(dataPerMinArray.get(i).HR()>inputStart)
+            {
+                duringTrems.add(dataPerMinArray.get(i));
+                count++;
+            }
+            if(dataPerMinArray.get(i).HR()<inputEnd)
+            {
+                if (count!=0) {
+                    //System.out.println("lenght of this tremmor: " + count);
+                }
+                tremmors.add(duringTrems);
+                count = 0;
+                duringTrems = new ArrayList<DataPerMin>();
+                //duringTrems.clear();
+            }
+        }
+        
+        //System.out.println("Total Amount: " + tremmors.size());
+        evaluate();
+        /**
+        System.out.println(" ");
+        System.out.println("Min Times");
+        for(int x = 0; mins.size() > x; x++)
+        {
+           System.out.println(((DataPerMin)mins.get(x)).time());
+        }
+        mins=null;
+        */
+    }
+    
+    /**
+     * evaluates duringTrmor to give length, mean, and highest point during tremor
+     */
+    public void evaluate()
+    {
+        //print the max heart rate during tremor and the max vector magnitude during tremor
+        System.out.println("Tremors");
+        String date = null;
+        String startTime=null;
+        String endTime=null;
+        String intensity= null;
+        int maxHR=0, count=0;
+        double maxVec=0;
+         
+         for(int i = 0; tremmors.size()>i; i++)
+         {
+             ArrayList trem = tremmors.get(i);
+             if(trem.size()>0)
+             {DataPerMin temp = (DataPerMin)trem.get(0);
+              startTime = temp.time();
+              date = temp.date();}
+             for(int x = 0; trem.size()>x; x++)
+             {
+                 DataPerMin tremTemp = (DataPerMin)trem.get(x);
+                 //System.out.println(tremTemp.HR());
+
+                 if(tremTemp.HR() > maxHR)
+                   {maxHR = tremTemp.HR();}
+                 if(tremTemp.vec() > maxVec)
+                 {maxVec = tremTemp.vec();}
+                 endTime = tremTemp.time();
+                 count++;
+             }
+             
+             if(date != null)
+             {      System.out.println("");
+                   System.out.println("Date: " + date);
+                   System.out.println("Time: " + startTime + "-" + endTime);
+                   System.out.println("Intensity: " + intensity);
+                   System.out.println("Max HR: " + maxHR);
+                   System.out.println("Max Vector Magnitude: " + maxVec);
+                   System.out.println("Length: " + count);
+                   
+                   Tremor tremor = new Tremor(date, startTime, endTime, maxHR, maxVec, count);
+                   tremList.add(tremor);
+             }    
+                   date = null;
+                   startTime=null;
+                   endTime=null;
+                   maxHR=0;
+                   maxVec=0;
+                   count=0;
+             
+          }
+          System.out.println("");
+          System.out.println("Total Tremors:" + tremList.size()); 
+        /**
+           for(int i = 0; tremmors.size()>i; i++)
+           {     ArrayList trem = tremmors.get(i);
+                 DataPerMin temp = (DataPerMin)trem.get(0);
+                 startTime = temp.time();
+               for(int x =0; trem.size()>x;x++)
+               {
+                   DataPerMin tremMin = (DataPerMin)trem.get(x);
+                   
+                   if(tremMin.HR() > maxHR)
+                   {maxHR = tremMin.HR();}
+                   if(tremMin.vec() > maxVec)
+                   {maxVec = tremMin.vec();}
+                   endTime = tremMin.time();
+                   date = tremMin.date();
+                   count++;
+               }
+                   System.out.println("");
+                   System.out.println("Date" + date);
+                   System.out.println("Time: " + startTime + "-" + endTime);
+                   System.out.println("Max HR: " + maxHR);
+                   System.out.println("Max Vactor Magnitude: " + maxVec);
+                   System.out.println("Length : " + count);
+                  
+                   date = null;
+                   startTime=null;
+                   endTime=null;
+                   maxHR=0;
+                   maxVec=0;
+                   count=0;
+           }
+           */
+        
+    }
+    
+    /**
+     * returns tremList
+     * @return tremList
+     */
+    public ArrayList tremList()
+    {
+        return tremList;
+    }
+    
+    /**
+     * counts tremors
+     *
+    public void countMins()
+    {
+       List<DataPerMin> mins = new ArrayList<DataPerMin>();
+       int count = 0;
+       int val = 0;
+       int min = 0;
+       int i = 0;
+       val = dataPerMinArray.get(i).HR();
+       min = val;
+       while(i < dataPerMinArray.size())
+       {
+           i++;
+           val = dataPerMinArray.get(i).HR();
+           if(val < min)
+           {
+               min = val;
+               mins.add((DataPerMin)(dataPerMinArray.get(i)));
+            }
+           
+        }
+        
+       for(int x = 0; mins.size() > x; x++)
+       {
+           System.out.println("Min Times");
+           System.out.println(((DataPerMin)mins.get(i)).time());
+        }
+    }
+    
+
+    
+    /**
+    public static boolean isIncreasing(List<DataPerMin> arr)
+    {
+        
+        
+        boolean z = false;
+
+        for(int i=0; i<arr.length;i++)
+        {
+            if(((DataPerMin)arr.get(i)).HR()<((DataPerMin)arr.get(i+1)).HR())
+            {
+                z = true;
+            }
+        }
+
+        return z;
+    }
+    */
+    
+    /**
+     * returns list of low intensity tremors
+     *
+    public List lowIntense()
+    {
+        return lowIntense;
+    }
+    
+    /**
+     * returns list of medium intensity tremors
+     *
+    public List medIntense()
+    {
+        return medIntense;
+    }
+    
+    /**
+     * returns list of high intensity tremors
+     *
+    public List highIntense()
+    {
+        return highIntense;
+    }
+    
+    */
+    
+
+}
+
+/**
+ *          if((analyzeObject.HR() > 160)&& (analyzeObject.vec() > 8000)
+            {
+                
+            }
+            
+            if((analyzeObject.HR() > 140)&& (analyzeObject.vec() > 6000)
+            {
+                
+            }
+            
+            if((analyzeObject.HR() > 100)&& (analyzeObject.vec() > 4500)
+            { 
+                
+            }
+            
+ * 
+ */
