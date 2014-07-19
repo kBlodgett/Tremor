@@ -8,7 +8,7 @@
 import java.util.*;
 public class HighIntense
 {
-    private List<DataPerMin>  highTremor = new ArrayList<DataPerMin>();
+    private List<Tremor>  highTremor = new ArrayList<Tremor>();
     private double vec = 0;
     private int HR = 0;
 
@@ -22,26 +22,36 @@ public class HighIntense
 
     public void highest()
     {
-        DataPerMin high;
+        Tremor high;
+        String HRdate = "0", HRtime = "0", vecDate = "0", vecTime = "0";
         for(int i = 0; highTremor.size() > i; i++)
         {
-            high = (DataPerMin) highTremor.get(i);
-            if(high.HR() > HR)
-            {HR = high.HR();}
-            
-            if(high.vec() > vec)
-            {vec = high.vec();}
+            high = (Tremor) highTremor.get(i);
+            if(high.maxHR() > HR)
+            {HR = high.maxHR();
+             HRdate = high.date();
+             HRtime = high.startTime()+"-"+high.endTime(); 
+            }
+            if(high.maxVec() > vec)
+            {vec = high.maxVec();             
+             vecDate = high.date();
+             vecTime = high.startTime()+"-"+high.endTime();
+            }
         }
 
         System.out.println(" ");
         System.out.println("Highest:");
-        System.out.println("    HR - " + HR);
-        System.out.println("    Vector Magnitude - " + vec);
+        System.out.println("    HR: " + HR);
+        System.out.println("        Date:" + HRdate);
+        System.out.println("        Time:" + HRtime);        
+        System.out.println("    Vector Magnitude: " + vec);
+        System.out.println("        Date:" + HRdate);
+        System.out.println("        Time:" + HRtime);
     }
 
     /**
      * prints out the array list of lowest intensity tremors
-     */
+     *
     public void print()
     {
         DataPerMin high;
@@ -53,4 +63,5 @@ public class HighIntense
         }
         
     }
+    */
 }
