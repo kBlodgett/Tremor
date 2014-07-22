@@ -1,3 +1,4 @@
+
 /**
  * TremorCount: counts the number of tremors in a set amount of time (so far only a day)
  * 
@@ -5,6 +6,7 @@
  * @version 1.0
  */
 import java.util.*;
+import java.text.DecimalFormat;
 public class TremorCount
 {
     // instance variables - replace the example below with your own
@@ -35,7 +37,7 @@ public class TremorCount
         for(int i = 0; tremors.size()>i; i++)
         {
             Tremor trem = (Tremor)tremors.get(i);
-            trem.splitDate();
+            
             tremors.set(i, trem);
         }
     }
@@ -54,11 +56,13 @@ public class TremorCount
             for(int i =0; tremors.size()> i; i++)
             {
                 Tremor trem = (Tremor)tremors.get(i);
+                trem.splitDate();
                 if(trem.day()==count)
                 {
                     temp.add(trem);
                 }
             }
+            temp = new ArrayList<Tremor>();
             tremPerDay.add(temp);
         }
         printTremsPerDay();
@@ -69,22 +73,43 @@ public class TremorCount
      */
     private void printTremsPerDay()
     {
-        System.out.println("Tremors Per Day");
-        int total=0;
-        double average=0.00;
+        System.out.println("");
+        System.out.println("Tremors Per Day: Averages");
+        System.out.printf("%-15s %-15s %-10s %-20s %-6s %n","# of Tremors", "Date", "HR", "Vector Magnitude", "Length");
+        double total= 0.00, average=0.00;
+        int tremTotalCount=0;
         for(int i = 0; tremPerDay.size()>i; i++)
         {
             ArrayList<Tremor> temp = tremPerDay.get(i);
+            
+            double tempHR = 0.00, tempVec = 0.00, tempLength =0.00;
+            for(int x =0; temp.size()>x; x++)
+            {
+                Tremor tremTemp = (Tremor)temp.get(x);
+                tempHR += tremTemp.maxHR();
+                tempVec += tremTemp.maxVec();
+                tempLength += tremTemp.length();
+            }
+            
+            if(tempHR !=0){tempHR = tempHR/temp.size();} 
+            if(tempVec!=0){tempVec = tempVec/temp.size();} 
+            if(tempLength!=0){tempLength = tempLength/temp.size();}
             Tremor tempTrem = null;
             if(temp.size()>0)
             {tempTrem = temp.get(0);}
-            String date = tempTrem.date();
-            total += temp.size();
-            System.out.println(date +": "+ temp.size());
+            if(tempTrem != null)
+            {   String date = tempTrem.date();
+                total += temp.size();
+                DecimalFormat  df = new DecimalFormat("#.00");
 
+                System.out.printf("%-15s %-15s %-10s %-20s %-6s %n",temp.size(), date, df.format(tempHR), df.format(tempVec), df.format(tempLength));
+                tremTotalCount++;
+            }   
+            
+            
+            tempHR = 0; tempVec= 0; tempLength = 0;
         }
-        if(total!=0)
-        {average = (total/tremPerDay.size());}
+        if(total!=0){average = (total/tremTotalCount);}
         System.out.println("Average: "+average);
     }
 }
