@@ -9,13 +9,13 @@ public class DataPerMin
 {
     // instance variables - replace the example below with your own
     private String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay; 
-    private int HR;
+    private int HR, format;
     private double vec;
 
     /**
      * Constructor for objects of class Device when reading in all data
      */
-    public DataPerMin(String dateC, String timeC, String axis1C, String axis2C, String axis3C, String stepsC, int heartrate, String luxC, String inclinometerOff, String inclinometerStanding, String inclinometerSitting, String inclinometerLying, double vector)
+    public DataPerMin(String dateC, String timeC, String axis1C, String axis2C, String axis3C, String stepsC, int heartrate, String luxC, String inclinometerOff, String inclinometerStanding, String inclinometerSitting, String inclinometerLying, double vector,int formatminsec)
     {
         date = dateC;
         time = timeC;
@@ -30,6 +30,7 @@ public class DataPerMin
         iSit = inclinometerSitting; 
         iLay = inclinometerLying;
         vec = vector;     
+        format = formatminsec;
     }
     
      /**
@@ -165,6 +166,17 @@ public class DataPerMin
     public double vec()
     {
         return vec;
+    }
+    
+    /**
+     * returns the format 
+     * 1 = mins
+     * 2 = secs
+     * @return format
+     */
+    public int format()
+    {
+        return format;
     }
     
 }
