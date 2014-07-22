@@ -1,7 +1,7 @@
+
 /**
  * Driver: Make a program to record and differentiate between tremors and everyday life using data from a movement device. 
- * Tremor class holds a lot of the main processes for this program 
- *
+ * 
  * @author Kirjsten Blodgett
  * @version 1.0
  * email: catsanddogskb@hotmail.com
@@ -12,7 +12,6 @@ public class Driver
 {
     public static void main(String[] args) throws IOException
     {
-    
         List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
         ReadIn readIn = new ReadIn();
         
@@ -21,15 +20,6 @@ public class Driver
         TremorEvaluation tremor = new TremorEvaluation(dataPerMinArray);
         tremor.mins();
         tremor.categorize();
-        
-        //LowIntense lowIntense = new LowIntense(tremor.lowIntense());
-        //lowIntense.print();
-        //MedIntense medIntense = new MedIntense(tremor.medIntense());
-        //medIntense.print();
-        //HighIntense highIntense = new HighIntense(tremor.highIntense());
-        //highIntense.print();
-        
-        
         LowIntense lowIntense = new LowIntense(tremor.tremList());
         HighIntense highIntense = new HighIntense(tremor.tremList());
         lowIntense.lowest();
@@ -38,6 +28,7 @@ public class Driver
         tremor.vecMean();
         TremorCount tremCount = new TremorCount(tremor.tremList());
         tremCount.tremPerDay();
-        
+        Sort sort = new Sort(tremor.tremList());
+        sort.choice();
     }
 }
