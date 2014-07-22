@@ -1,16 +1,16 @@
 /**
  * Read in the CSV file from device, prints out file in nice labeled format, and creates CSV file with only HR, time, and vector magnitude.
- * Some things are commented out
+ * 
  * @author Kirjsten Blodgett 
- * @version 1.0
+ * @version numbuh juan
  * email: catsanddogskb@hotmail.com
  */
 import java.io.*;
 import java.util.Scanner;
 import java.util.*;
+import java.lang.Math;
 public class ReadIn   
 {
-    private Scanner reader;
     private Scanner reader;
     private Scanner keyboard = new Scanner(System.in);
     private PrintWriter writer = new PrintWriter( new FileWriter("tremorData.csv"));
@@ -50,22 +50,62 @@ public class ReadIn
      */
     public void read()
     {
-        String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay;
-        int HR;
-        double vec;
+        int format = 0;
+        String ans;
+        /**
+        do
+        {   System.out.println("Is the file in Mins or Secs? (1 - Mins, 2 - Secs)");
+            format = keyboard.nextInt();
+        }while(format != 1 && format != 2);
+        */
+        System.out.println("Would you like to see the raw data from the file?");
+        ans = keyboard.next();
+        System.out.println("Loading Please Wait. Restart Program if it takes longer than 5mins");
+        for(int i=0; 13>i;i++)
+        {
+            if(reader.next().equalsIgnoreCase("date"))
+            {
+                format = 1;
+            }else format = 2;
+        }
+        if(format == 1)
+        {    if(ans.equalsIgnoreCase("yes"))
+            {   printHeader();
+                writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
+            }
+            
+            readInMinutes(ans, format);
+        }
+        if(format == 2)
+        {
+             if(ans.equalsIgnoreCase("yes"))
+            {   printHeader();
+                writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
+            }
+            readInSeconds(ans, format);
+        }
+        if(format == 0)
+        {
+            System.out.println("File set-up format was not initialized. Terminating");
+            System.exit(0);
+        }
         
+    }
+    
+    /**
+     * reads in minutes and sets per minute data
+     */
+    public void readInMinutes(String ans, int format)
+    {
         for(int i = 0; i < 13; i++)
         {
             reader.nextLine();
         }
-        
-        System.out.println("Would you like to see the raw data from the file?");
-        String ans = keyboard.next();
-        if(ans.equalsIgnoreCase("yes"))
-        {printHeader();}
-        writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
+        String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay;
+        int HR;
+        double vec;
         while(reader.hasNextLine())
-        {
+            {
             String input = reader.nextLine();
             String[] textArray = input.split("[, ]+");
             
@@ -88,10 +128,82 @@ public class ReadIn
             
             //what am i doing wrong???
             writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
-            DataPerMin dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec);
+            DataPerMin dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec, format);
             dataPerMinArray.add(dataPerMin);
             if(ans.equalsIgnoreCase("yes"))
             {print(dataPerMin);}
+        }
+        reader.close();
+        writer.close();
+        
+    }
+    
+    /**
+     * reads in seconds and sets per minute data (NOTE: data is changed to work like minute data)
+     */
+    public void readInSeconds(String ans, int format)
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            reader.nextLine();
+        }
+        String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay;
+        int HR, sec = 00, min = 00, hour = 00, month = 00, day =00, year =00;
+        double vec;
+        String dateStr, timeStr;
+        
+        reader.next();reader.next();dateStr = reader.next(); reader.nextLine(); reader.nextLine();
+        String[] dateArray = dateStr.split("[/]+");
+        month = Integer.parseInt(dateArray[0]);
+        day = Integer.parseInt(dateArray[1]);
+        year = Integer.parseInt(dateArray[2]);
+        
+        reader.next();reader.next();timeStr = reader.next();
+        String[] timeArray = timeStr.split("[:]+");
+        hour = Integer.parseInt(timeArray[0]);
+        min = Integer.parseInt(timeArray[1]);
+        sec = Integer.parseInt(timeArray[2]);
+
+        for(int i = 0; i <= 4; i++)
+        {
+            reader.nextLine();
+        }
+        while(reader.hasNextLine())
+        {
+            ++sec;
+            if(sec == 60){++min; sec=00;}
+            if(min == 60){++hour; min=00;}
+            if(hour == 24){++day; hour=00;}
+            if(month==1||month==3||month==5||month==7||month==8||month==10||month==12){if(day==31){++month;day=01;}}
+            if(month==2){if(day==28){++month;day=01;}}
+            if(month==4||month==6||month==9||month==11){if(day==30){++month;day=01;}}
+            if(month==12){++year;month=01;}
+            String input = reader.nextLine();
+            String[] textArray = input.split("[, ]+");
+            date = (Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year));
+            time = (Integer.toString(hour)+":"+Integer.toString(min)+":"+Integer.toString(sec));
+            axis1 = textArray[0];
+            axis2 = textArray[1];
+            axis3 = textArray[2];
+            steps = textArray[3];
+            HR = Integer.parseInt(textArray[4]);
+            lux = textArray[5];
+            iOff = textArray[6];
+            iStand = textArray[7];
+            iSit= textArray[8];
+            iLay = textArray[9];
+            
+            int y = Integer.parseInt(axis1), x = Integer.parseInt(axis2), z = Integer.parseInt(axis3);
+            vec = Math.sqrt((x*x*60)+(y*y*60)+(z*z*60));
+            
+            if(HR !=0 && vec !=0 && !iOff.equalsIgnoreCase("1"))
+            {   writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
+                DataPerMin dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec, format);
+                dataPerMinArray.add(dataPerMin);
+            
+                if(ans.equalsIgnoreCase("yes"))
+                {print(dataPerMin);}
+            }
         }
         reader.close();
         writer.close();
@@ -123,19 +235,6 @@ public class ReadIn
      */
     public List dataPerMinArray()
     {
-        /**
-        if(dataPerMinArray.isEmpty())
-        {
-            System.out.println("DataPerMin Array is Empty");
-        }else
-        {
-            System.out.println("DataPerMinArray is not empty");
-            for(int i = 0; dataPerMinArray.size() > i; i++)
-            {       DataPerMin datapermin = (DataPerMin) dataPerMinArray.get(i);
-                    System.out.println(datapermin.HR());
-            }
-        }
-        */
         return dataPerMinArray;
     }
 }
