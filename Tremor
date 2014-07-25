@@ -9,14 +9,14 @@ import java.util.Comparator;
 public class Tremor
 {
     // instance variables - replace the example below with your own
-    private int maxHR, length, month, day, year, format;
+    private int maxHR, month, day, year, format;
     private String date, startTime, endTime, intensity;
-    private double maxVec;
+    private double maxVec, length;
 
     /**
      * Constructor for objects of class Tremor
      */
-    public Tremor(String passingdate, String timeStart, String timeEnd, int hr, double vec, int count, int formatminsec)
+    public Tremor(String passingdate, String timeStart, String timeEnd, int hr, double vec, double count, int formatminsec)
     {
         date = passingdate;
         startTime = timeStart;
@@ -83,7 +83,7 @@ public class Tremor
      * returns the length of tremor
      * @return length 
      */
-    public int length()
+    public double length()
     {
         return length;
     }
@@ -176,8 +176,8 @@ public class Tremor
     public static Comparator<Tremor> TremorLengthComparator = new Comparator<Tremor>() 
     {
         public int compare(Tremor t1, Tremor t2) {
-            int Tremor1 = t1.length();
-            int Tremor2 = t2.length();
+            int Tremor1 = (int)t1.length();
+            int Tremor2 = (int)t2.length();
             return Tremor2-Tremor1;
         }
     };
