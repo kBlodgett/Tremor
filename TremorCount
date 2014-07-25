@@ -13,6 +13,7 @@ public class TremorCount
     private ArrayList<Tremor> tremors = new ArrayList<Tremor>();
     private ArrayList<ArrayList> tremPerDay = new ArrayList<ArrayList>();
     private int f;
+    private double maxHR=0, maxVec=0, maxLength=0, minLength=999;
         
     /**
      * Constructor for objects of class TremorCount
@@ -37,7 +38,7 @@ public class TremorCount
         for(int i = 0; tremors.size()>i; i++)
         {
             Tremor trem = (Tremor)tremors.get(i);
-            
+            trem.splitDate();
             tremors.set(i, trem);
         }
     }
@@ -56,7 +57,6 @@ public class TremorCount
             for(int i =0; tremors.size()> i; i++)
             {
                 Tremor trem = (Tremor)tremors.get(i);
-                trem.splitDate();
                 if(trem.day()==count)
                 {
                     temp.add(trem);
@@ -69,14 +69,14 @@ public class TremorCount
     }
     
     /**
-     * prints out how many tremors per day
+     * prints out how many tremors per day and averages for HR, vecmag, and length;
      */
     private void printTremsPerDay()
     {
         System.out.println("");
         System.out.println("Tremors Per Day: Averages");
-        System.out.printf("%-15s %-15s %-10s %-20s %-6s %n","# of Tremors", "Date", "HR", "Vector Magnitude", "Length");
-        double total= 0.00, average=0.00;
+        System.out.printf("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Ave Vector Magnitude", "Max Vector Magnitude", "Ave Length","Max Length","Min Length" );
+        double total= 0.00, average=0.00, totalHR=0.00, totalVec=0.00, totalLength=0.00;
         int tremTotalCount=0;
         for(int i = 0; tremPerDay.size()>i; i++)
         {
@@ -89,6 +89,11 @@ public class TremorCount
                 tempHR += tremTemp.maxHR();
                 tempVec += tremTemp.maxVec();
                 tempLength += tremTemp.length();
+                
+                if(maxHR < tremTemp.maxHR()){maxHR = tremTemp.maxHR();}
+                if(maxVec < tremTemp.maxVec()){maxVec = tremTemp.maxVec();}
+                if(maxLength < tremTemp.length()){maxLength = tremTemp.length();}
+                if(minLength > tremTemp.length()){minLength = tremTemp.length();}
             }
             
             if(tempHR !=0){tempHR = tempHR/temp.size();} 
@@ -100,16 +105,22 @@ public class TremorCount
             if(tempTrem != null)
             {   String date = tempTrem.date();
                 total += temp.size();
-                DecimalFormat  df = new DecimalFormat("#.00");
-
-                System.out.printf("%-15s %-15s %-10s %-20s %-6s %n",temp.size(), date, df.format(tempHR), df.format(tempVec), df.format(tempLength));
+                totalHR += tempHR;
+                totalVec += tempVec;
+                totalLength += tempLength;
+                
+                DecimalFormat  df = new DecimalFormat("0.00");
+                //               ("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Ave Vector Magnitude", "Max Vector Magnitude", "Ave Length","Max Length","Min Length" )
+                System.out.printf("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n",temp.size(), date, df.format(tempHR), df.format(maxHR), df.format(tempVec), df.format(maxVec), df.format(tempLength), df.format(maxLength), df.format(minLength));
+                maxHR=0; maxVec=0; maxLength=0; minLength=999;
                 tremTotalCount++;
             }   
-            
-            
             tempHR = 0; tempVec= 0; tempLength = 0;
         }
-        if(total!=0){average = (total/tremTotalCount);}
-        System.out.println("Average: "+average);
+        System.out.println("File Averages:");
+        if(total!=0){System.out.println("   Tremor: "+ (total/tremTotalCount));}
+        if(totalHR!=0){System.out.println("   Heartrate: " + (totalHR/tremTotalCount));}
+        if(totalVec!=0){System.out.println("   Vector Magnitude:" + (totalVec/tremTotalCount));}
+        if(totalLength!=0){System.out.println("   Length: " + (totalLength/tremTotalCount));}
     }
 }
