@@ -13,7 +13,7 @@ public class TremorCount
     private ArrayList<Tremor> tremors = new ArrayList<Tremor>();
     private ArrayList<ArrayList> tremPerDay = new ArrayList<ArrayList>();
     private int f;
-    private double maxHR=0, maxVec=0, maxLength=0, minLength=999;
+    private double maxHR=0, minHR=999, maxVec=0, minVec = 9999999, maxLength=0, minLength=999;
         
     /**
      * Constructor for objects of class TremorCount
@@ -75,7 +75,7 @@ public class TremorCount
     {
         System.out.println("");
         System.out.println("Tremors Per Day: Averages");
-        System.out.printf("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Ave Vector Magnitude", "Max Vector Magnitude", "Ave Length","Max Length","Min Length" );
+        System.out.printf("%-15s %-15s %-10s %-10s %-10s %-25s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Min HR","Ave Vector Magnitude", "Max Vector Magnitude","Min Vector Magnitude", "Ave Length","Max Length","Min Length" );
         double total= 0.00, average=0.00, totalHR=0.00, totalVec=0.00, totalLength=0.00;
         int tremTotalCount=0;
         for(int i = 0; tremPerDay.size()>i; i++)
@@ -94,6 +94,8 @@ public class TremorCount
                 if(maxVec < tremTemp.maxVec()){maxVec = tremTemp.maxVec();}
                 if(maxLength < tremTemp.length()){maxLength = tremTemp.length();}
                 if(minLength > tremTemp.length()){minLength = tremTemp.length();}
+                if(minHR > tremTemp.maxHR()){minHR = tremTemp.maxHR();}
+                if(minVec>tremTemp.maxVec()){minVec=tremTemp.maxVec();}
             }
             
             if(tempHR !=0){tempHR = tempHR/temp.size();} 
@@ -111,8 +113,8 @@ public class TremorCount
                 
                 DecimalFormat  df = new DecimalFormat("0.00");
                 //               ("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Ave Vector Magnitude", "Max Vector Magnitude", "Ave Length","Max Length","Min Length" )
-                System.out.printf("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n",temp.size(), date, df.format(tempHR), df.format(maxHR), df.format(tempVec), df.format(maxVec), df.format(tempLength), df.format(maxLength), df.format(minLength));
-                maxHR=0; maxVec=0; maxLength=0; minLength=999;
+                System.out.printf("%-15s %-15s %-10s %-10s %-10s %-25s %-25s %-25s %-12s %-12s %-12s %n",temp.size(), date, df.format(tempHR), df.format(maxHR),df.format(minHR), df.format(tempVec), df.format(maxVec),df.format(minVec), df.format(tempLength), df.format(maxLength), df.format(minLength));
+                maxHR=0; minHR=999; maxVec=0; minVec=99999999; maxLength=0; minLength=999;
                 tremTotalCount++;
             }   
             tempHR = 0; tempVec= 0; tempLength = 0;
