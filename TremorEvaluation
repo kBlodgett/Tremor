@@ -93,7 +93,7 @@ public class TremorEvaluation
         //vecEnd = keyboard.nextDouble(); || dataPerMinArray.get(i).vec()>vecEnd
         for(int i =0; dataPerMinArray.size()>i; i++)
         {
-            if(dataPerMinArray.get(i).HR()>inputStart && dataPerMinArray.get(i).vec()>vecInput)
+            if(dataPerMinArray.get(i).HR()>inputStart || dataPerMinArray.get(i).vec()>vecInput)
             {
                  duringTrems.add(dataPerMinArray.get(i));
                  count++;
