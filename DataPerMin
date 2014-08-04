@@ -1,3 +1,6 @@
+package tremornetbeans;
+
+
 /**
  * All the methods/actions for movement device
  * 
@@ -52,7 +55,6 @@ public class DataPerMin
 
     /**
      * returns date
-     * @param  
      * @return date
      */
     public String date()
@@ -134,7 +136,7 @@ public class DataPerMin
         
     /**
      * returns inclinometer standing
-     * return iStand
+     * @return iStand
      */
     public String iStand()
     {
