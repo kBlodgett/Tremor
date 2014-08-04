@@ -1,4 +1,6 @@
 
+package tremornetbeans;
+
 /**
  * TremorCount: counts the number of tremors in a set amount of time (so far only a day)
  * 
@@ -7,14 +9,17 @@
  */
 import java.util.*;
 import java.text.DecimalFormat;
+import javax.swing.*;
 public class TremorCount
 {
     // instance variables - replace the example below with your own
     private ArrayList<Tremor> tremors = new ArrayList<Tremor>();
+    private List<TremorDays> tremDayObjects = new ArrayList<TremorDays>();
     private ArrayList<ArrayList> tremPerDay = new ArrayList<ArrayList>();
     private int f;
-    private double maxHR=0, minHR=999, maxVec=0, minVec = 9999999, maxLength=0, minLength=999;
-        
+    private double maxHR=0, minHR=999, maxVec=0, minVec = 9999999, maxLength=0, minLength=999, strHR, strTrem, strVec, strLength;
+    private JTextArea ta;
+    private ArrayList<ArrayList> tremorPrint = new ArrayList<ArrayList>();
     /**
      * Constructor for objects of class TremorCount
      */
@@ -110,19 +115,56 @@ public class TremorCount
                 totalHR += tempHR;
                 totalVec += tempVec;
                 totalLength += tempLength;
-                
+                ArrayList<String> tremDay = new ArrayList<String>();
                 DecimalFormat  df = new DecimalFormat("0.00");
                 //               ("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Ave Vector Magnitude", "Max Vector Magnitude", "Ave Length","Max Length","Min Length" )
                 System.out.printf("%-15s %-15s %-10s %-10s %-10s %-25s %-25s %-25s %-12s %-12s %-12s %n",temp.size(), date, df.format(tempHR), df.format(maxHR),df.format(minHR), df.format(tempVec), df.format(maxVec),df.format(minVec), df.format(tempLength), df.format(maxLength), df.format(minLength));
-                maxHR=0; minHR=999; maxVec=0; minVec=99999999; maxLength=0; minLength=999;
+                
                 tremTotalCount++;
+                String size = Integer.toString(temp.size());
+                String printHR = Double.toString(tempHR);
+                String printMaxHR = Double.toString(maxHR);
+                String printMinHR = Double.toString(minHR);
+                String printVec = Double.toString(tempVec);
+                String printMaxVec = Double.toString(maxVec);
+                String printMinVec = Double.toString(minVec);
+                String printLength = Double.toString(tempLength);
+                String printMaxLength = Double.toString(maxLength);
+                String printMinLength = Double.toString(minLength);
+                tremDay.add(size);tremDay.add(date);tremDay.add(printHR);tremDay.add(printMaxHR);tremDay.add(printMinHR);tremDay.add(printVec);tremDay.add(printMaxVec);tremDay.add(printMinVec);tremDay.add(printLength);tremDay.add(printMaxLength);tremDay.add(printMinLength);
+                tremorPrint.add(tremDay);
+                TremorDays tremsDay = tremsDay = new TremorDays(size, date, printHR, printMaxHR, printMinHR, printVec, printMaxVec, printMinVec, printLength, printMaxLength, printMinLength);
+                tremDayObjects.add(tremsDay);
+                maxHR=0; minHR=999; maxVec=0; minVec=99999999; maxLength=0; minLength=999;
             }   
             tempHR = 0; tempVec= 0; tempLength = 0;
+            
         }
         System.out.println("File Averages:");
         if(total!=0){System.out.println("   Tremor: "+ (total/tremTotalCount));}
         if(totalHR!=0){System.out.println("   Heartrate: " + (totalHR/tremTotalCount));}
         if(totalVec!=0){System.out.println("   Vector Magnitude:" + (totalVec/tremTotalCount));}
         if(totalLength!=0){System.out.println("   Length: " + (totalLength/tremTotalCount));}
+        strTrem=(total/tremTotalCount); strHR =(totalHR/tremTotalCount); strVec=(totalVec/tremTotalCount); strLength = (totalLength/tremTotalCount);
     }
+    
+    /**
+     * returns all the days with totals (length, hr, vec:  all mins, mean, max)
+     * @return tremDayObjects 
+     */
+    public List tremDays()
+    {
+        return tremDayObjects;
+    }
+    
+    public String mean()
+    {
+        String meanStr = ("File Averages:\n"
+                + "   Tremor: "+ strTrem+"\n"
+                + "   Heartrate: " + strHR+"\n"
+                + "   Vector Magnitude:"+ strVec+"\n"
+                + "   Length: " + strLength);
+        return meanStr;
+    }
+
 }
