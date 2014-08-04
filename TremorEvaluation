@@ -1,3 +1,5 @@
+package tremornetbeans;
+
 /**
  * class Tremor: This classs is to help determine what a tremor is. these objects will be reviewed again
  * in the other classes labeled lowintense, medintense, and high intense to determine just how intense a 
@@ -20,8 +22,8 @@ public class TremorEvaluation
     private String timeStart, timeEnd;
     private int HR=0;
     private double vec=0, meanVec = 0.00, meanHR=0.00;
-    private int inputStart, inputEnd;
-    private double vecInput, vecEnd;
+    private int inputStart= 0, inputEnd= 0;
+    private double vecInput= 0, vecEnd;
     /**
      * Constructor for objects of class Tremor
      */
@@ -30,6 +32,13 @@ public class TremorEvaluation
         dataPerMinArray = tremors;
     }
 
+    public TremorEvaluation(List tremors, String start, String end, String vec)
+    {
+        dataPerMinArray = tremors;
+        inputStart = Integer.parseInt(start);
+        inputEnd = Integer.parseInt(end);
+        vecInput = Double.parseDouble(vec);
+    }
    
     
     
@@ -80,15 +89,18 @@ public class TremorEvaluation
         int tremCount = 0;
         int maxHR=0;
         double maxVec=0;
-        System.out.println(" ");
-        System.out.println("Tremor Thresholds:");
+        
         ArrayList<DataPerMin>  duringTrems = new ArrayList<DataPerMin>();
-        System.out.println("Threshold for heart rate when tremor is starting?");
-        inputStart = keyboard.nextInt();
-        System.out.println("Threshold for heart rate when tremor is ending?");
-        inputEnd = keyboard.nextInt();
-        System.out.println("Threshold for the vector magnitude when tremor is starting?");
-        vecInput = keyboard.nextDouble();
+        if(inputStart == 0 && inputEnd == 0 && vecInput == 0)
+        {   System.out.println(" ");
+            System.out.println("Tremor Thresholds:");
+            System.out.println("Threshold for heart rate when tremor is starting?");
+            inputStart = keyboard.nextInt();
+            System.out.println("Threshold for heart rate when tremor is ending?");
+            inputEnd = keyboard.nextInt();
+            System.out.println("Threshold for the vector magnitude when tremor is starting?");
+            vecInput = keyboard.nextDouble();
+        }
         //System.out.println("Treshold for the vector magnitude when tremor is ending?");
         //vecEnd = keyboard.nextDouble(); || dataPerMinArray.get(i).vec()>vecEnd
         for(int i =0; dataPerMinArray.size()>i; i++)
@@ -235,6 +247,7 @@ public class TremorEvaluation
         
     }
     
+    
     /**
      * returns tremList
      * @return tremList
@@ -242,6 +255,20 @@ public class TremorEvaluation
     public ArrayList tremList()
     {
         return tremList;
+    }
+    
+    /**
+     * retuns mean
+     * @return meanStr
+     */
+    public String meanStr() 
+    {
+        String meanStr = ("Mean:\n"
+                + "    HR: " + meanHR+"\n"
+                + "    Vector Magnitude: " + meanVec);
+        return meanStr;
+        
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
