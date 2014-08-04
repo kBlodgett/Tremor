@@ -1,12 +1,12 @@
+package tremornetbeans;
+
 /**
- * LowHigh: finds the lowest/highest intensity tremor and prints it out.
- *
+ * LowIntense: finds the lowest intensity tremor and prints out low tremor array.
+ * 
  * @author Kirjsten Blodgett 
  * @version 1.0
  * email: catsanddogskb@hotmail.com
  */
-import java.io.*;
-import java.util.Scanner;
 import java.util.*;
 public class LowHigh
 {
@@ -18,6 +18,7 @@ public class LowHigh
 
     /**
      * Constructor for objects of class LowIntense
+     * @param tremorList
      */
     public LowHigh(List tremorList)
     {
@@ -76,6 +77,7 @@ public class LowHigh
     
     /**
      * Prints the highest and lowest of HR and Vec. Gives date and time of occurance
+     * Change to save to a text file
      */
     public void print()
     {
@@ -97,5 +99,24 @@ public class LowHigh
         System.out.println("        Time:" + highVecTime);
     }
     
-  
+    public String printStr()
+    {
+        String meanString;
+        meanString = ("Overall Statistics\n"
+                + "Lowest\n"
+                +"        HR: " + lowHR+"\n"
+                +"        Date:" + lowHRdate+"\n"
+                +"        Time:" + lowHRtime+"\n"
+                +"    Vector Magnitude: " + lowVec+"\n"
+                +"        Date:" + lowVecDate+"\n"
+                +"        Time:" + lowVecTime+"\n"
+                +"Highest\n" 
+                +"    HR: "+highHR+"\n"
+                +"        Date:" + highHRdate+"\n"
+                +"        Time:" + highHRtime+"\n"
+                +"    Vector Magnitude: " + highVec+"\n"
+                +"        Date:" + highVecDate+"\n"
+                +"        Time:" + highVecTime);
+        return meanString;
+    }
 }
