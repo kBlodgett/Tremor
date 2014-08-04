@@ -1,3 +1,5 @@
+package tremornetbeans;
+
 /**
  * Tremor: holds data about a single tremor
  * 
@@ -15,6 +17,13 @@ public class Tremor
 
     /**
      * Constructor for objects of class Tremor
+     * @param passingdate
+     * @param timeStart
+     * @param timeEnd
+     * @param hr
+     * @param vec
+     * @param formatminsec
+     * @param count
      */
     public Tremor(String passingdate, String timeStart, String timeEnd, int hr, double vec, double count, int formatminsec)
     {
@@ -157,6 +166,7 @@ public class Tremor
     
     public static Comparator<Tremor> TremorHRComparator = new Comparator<Tremor>() 
     {
+        @Override
         public int compare(Tremor t1, Tremor t2) {
             int Tremor1 = t1.maxHR();
             int Tremor2 = t2.maxHR();
@@ -166,6 +176,7 @@ public class Tremor
     
     public static Comparator<Tremor> TremorVecComparator = new Comparator<Tremor>() 
     {
+        @Override
         public int compare(Tremor t1, Tremor t2) {
             int Tremor1 = (int)t1.maxVec();
             int Tremor2 = (int)t2.maxVec();
@@ -175,6 +186,7 @@ public class Tremor
     
     public static Comparator<Tremor> TremorLengthComparator = new Comparator<Tremor>() 
     {
+        @Override
         public int compare(Tremor t1, Tremor t2) {
             int Tremor1 = (int)t1.length();
             int Tremor2 = (int)t2.length();
@@ -184,6 +196,7 @@ public class Tremor
     
     public static Comparator<Tremor> TremorDateComparator = new Comparator<Tremor>() 
     {
+        @Override
         public int compare(Tremor t1, Tremor t2) 
         {
             String Tremor1 = t1.date().toUpperCase();
