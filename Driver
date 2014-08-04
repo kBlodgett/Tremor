@@ -1,3 +1,5 @@
+package tremornetbeans;
+
 /**
  * Driver: Make a program to record and differentiate between tremors and everyday life using data from a movement device. 
  * 
@@ -6,27 +8,35 @@
  * email: catsanddogskb@hotmail.com
  */
 import java.io.*;
-import java.util.*;
 public class Driver
 {
     public static void main(String[] args) throws IOException
     {
-        List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
-        ReadIn readIn = new ReadIn();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+               new TremorGUI().setVisible(true);   
+            }
+        });
         
-        readIn.read();
-        dataPerMinArray = readIn.dataPerMinArray();
-        TremorEvaluation tremor = new TremorEvaluation(dataPerMinArray);
-        tremor.mins();
-        LowHigh lowHigh = new LowHigh(tremor.tremList());
-        lowHigh.lowest();
-        lowHigh.highest();
-        tremor.VecHRMean();
-        TremorCount tremCount = new TremorCount(tremor.tremList());
-        tremCount.tremPerDay();
-        lowHigh.print();
-        tremor.meanPrint();
-        Sort sort = new Sort(tremor.tremList());
-        sort.choice();
+        
+        //List<DataPerMin>  dataPerMinArray;
+        //ReadIn readIn = new ReadIn();
+        
+        //readIn.read();
+        //dataPerMinArray = readIn.dataPerMinArray();
+        //TremorEvaluation tremor = new TremorEvaluation(dataPerMinArray);
+        //tremor.mins();
+        //LowHigh lowHigh = new LowHigh(tremor.tremList());
+        //lowHigh.lowest();
+        //lowHigh.highest();
+        //tremor.VecHRMean();
+        //TremorCount tremCount = new TremorCount(tremor.tremList());
+        //tremCount.tremPerDay();
+        
+        //lowHigh.print();
+        //tremor.meanPrint();
+        //Sort sort = new Sort(tremor.tremList());
+        //sort.choice();
     }
 }
