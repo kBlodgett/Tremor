@@ -1,5 +1,7 @@
+package tremornetbeans;
+
 /**
- * Sort: Sorts out tremor data by either heartrate, vector magnitude, or date
+ * Sort: Sorts out tremor data by either heart-rate, vector magnitude, or date
  * Please note that data already comes pre-sorted in date/time order.
  * 
  * @author Kirjsten Blodgett 
@@ -9,12 +11,12 @@ import java.util.*;
 public class Sort
 {
     private Scanner keyboard = new Scanner(System.in);
-    private ArrayList<Tremor> tremors = new ArrayList<Tremor>();
+    private List<Tremor> tremors = new ArrayList<Tremor>();
     
     /**
      * Constructor for objects of class Sort
      */
-    public Sort(ArrayList tremorList)
+    public Sort(List tremorList)
     {
         tremors = tremorList;
     }
@@ -28,7 +30,7 @@ public class Sort
         
         do
         {   System.out.println("");
-            System.out.println("Sort by:\n1.Date/Time \n2.Heartrate \n3.Vector Magnitude (Amount of Movement) \n4.Length \n5.End");
+            System.out.println("Sort by:\n1.Date \n2.Heartrate \n3.Vector Magnitude (Amount of Movement) \n4.Length \n5.End");
             choice = keyboard.nextInt();
             switch(choice)
             {
@@ -46,46 +48,50 @@ public class Sort
     /**
      * Sorts date/time, most likey will not be used since the data already comes sorted by date.
      */
-    private void dateTime()
+    public List dateTime()
     {
         Collections.sort(tremors, Tremor.TremorDateComparator);
         System.out.println("Date/Time Sort");
         System.out.printf("%-15s %-20s %-10s %-20s %-10s %n","*Date*","Time","HR","Vector Magnitude","Length");
         print();
+        return tremors;
     }
     
     /**
      * sorts out tremors in order of highest heartrate to lowest heartrate.
      */
-    private void heartRate()
+    public List heartRate()
     {
         Collections.sort(tremors, Tremor.TremorHRComparator);
         System.out.println("Heartrate Sort");
         System.out.printf("%-15s %-20s %-10s %-20s %-10s %n","Date","Time","*HR*","Vector Magnitude","Length");
         print();
+        return tremors;
     }
     
     
     /**
      * sorts out tremors in order of highest vector magnitude to lowest vector magnitude.
      */
-    private void vectorMag()
+    public List vectorMag()
     {
        Collections.sort(tremors, Tremor.TremorVecComparator);
        System.out.println("Vector Magnitude Sort");
        System.out.printf("%-15s %-20s %-10s %-20s %-10s %n","Date","Time","HR","*Vector Magnitude*","Length");
        print();
+       return tremors;
     }
     
     /**
      * sorts out trmeors in order of highest length to lowest length
      */
-    private void length()
+    public List length()
     {
         Collections.sort(tremors, Tremor.TremorLengthComparator);
         System.out.println("Length Sort");
         System.out.printf("%-15s %-20s %-10s %-20s %-10s %n","Date","Time","HR","Vector Magnitude","*Length*");
         print();
+        return tremors;
     }
     
     /**
@@ -99,4 +105,14 @@ public class Sort
              System.out.printf("%-15s %-20s %-10s %-20s %-10s %n",trem.date(),(trem.startTime() + "-" + trem.endTime()),trem.maxHR(),trem.maxVec(),trem.length());
         }
     }
+    
+    /**
+     * returns sorted tremors
+     * @return tremors
+     */
+    public List tremors()
+    {
+        return tremors;
+    }
+    
 }
