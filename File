@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -14,14 +15,21 @@ import javax.swing.JOptionPane;
  */
 public class File extends javax.swing.JFrame {
 
+    String dataPerMinString = ("Date\tTime\tAxis1\tAxis2\tAxis3\tSteps\tHR\tLux\tInclinometer Off\t\tInclinometer Stand\tInclinometer Sit\t\tInclinometer Lay\tVector Magnitude\n");
+    
     List<DataPerMin> dataPerMinArray;
     /**
      * Creates new form File
      * @param read
      */
-    public File(List dataPerMin) {
+    public File(List dataPerMin, String file) {
         initComponents();
         dataPerMinArray = dataPerMin;
+        dataPerMinString += file; 
+        
+        fileTextArea = new JTextArea();
+        fileTextArea.setText(dataPerMinString);
+        fileScrollPane.setViewportView(fileTextArea);
     }
 
     File(String input) {
@@ -39,6 +47,7 @@ public class File extends javax.swing.JFrame {
 
         saveButtonFile = new javax.swing.JLabel();
         fileScrollPane = new javax.swing.JScrollPane();
+        fileTextArea = new javax.swing.JTextArea();
         fileBackground = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -52,6 +61,11 @@ public class File extends javax.swing.JFrame {
         getContentPane().add(saveButtonFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 80, 40));
 
         fileScrollPane.setBorder(null);
+
+        fileTextArea.setColumns(20);
+        fileTextArea.setRows(5);
+        fileScrollPane.setViewportView(fileTextArea);
+
         getContentPane().add(fileScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 750, 300));
 
         fileBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/File - Background.png"))); // NOI18N
@@ -85,6 +99,7 @@ public class File extends javax.swing.JFrame {
     // Variables declaration - do not modify                     
     private javax.swing.JLabel fileBackground;
     private javax.swing.JScrollPane fileScrollPane;
+    private javax.swing.JTextArea fileTextArea;
     private javax.swing.JLabel saveButtonFile;
     // End of variables declaration                   
 }
