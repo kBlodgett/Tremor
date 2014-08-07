@@ -3,6 +3,7 @@ package tremornetbeans;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,14 +14,25 @@ import javax.swing.JOptionPane;
  * @author Kirjsten
  */
 public class DailyEvents extends javax.swing.JFrame {
+    
+    String tremStr = ("Date\tTremors\tMean HR\tMin HR\tMax HR\tMean Movement\tMin Movement\tMax Movement\tMean Length\tMin Length\tMax Length\n");
 
     List<TremorDays> tremorDays;
     /**
      * Creates new form DailyEvents
      */
     public DailyEvents(List trems) {
-        tremorDays = trems;
         initComponents();
+        tremorDays = trems;
+        DecimalFormat df = new DecimalFormat("0.00");
+        for(int i =0; tremorDays.size()>i; i++)
+            {
+                TremorDays tDays = tremorDays.get(i);
+                tremStr += (tDays.date()+"\t"+tDays.count()+"\t"+df.format(Double.parseDouble(tDays.meanHR()))+"\t"+df.format(Double.parseDouble(tDays.minHR()))+"\t"+df.format(Double.parseDouble(tDays.maxHR()))+"\t"+df.format(Double.parseDouble(tDays.meanVec()))+"\t\t"+df.format(Double.parseDouble(tDays.minVec()))+"\t"+df.format(Double.parseDouble(tDays.maxVec()))+"\t"+df.format(Double.parseDouble(tDays.meanLength()))+"\t"+df.format(Double.parseDouble(tDays.minLength()))+"\t"+df.format(Double.parseDouble(tDays.maxLength()))+"\n");
+            }
+        dailyEventsTextArea.setText(tremStr);
+        //eventsTextArea.append(tremListStr);
+        dailyEventsScrollPane.setViewportView(dailyEventsTextArea);
     }
 
     /**
@@ -33,8 +45,9 @@ public class DailyEvents extends javax.swing.JFrame {
     private void initComponents() {
 
         saveButtonFile = new javax.swing.JLabel();
-        fileScrollPane = new javax.swing.JScrollPane();
-        fileBackground = new javax.swing.JLabel();
+        dailyEventsScrollPane = new javax.swing.JScrollPane();
+        dailyEventsTextArea = new javax.swing.JTextArea();
+        dailyEventsBackground = new javax.swing.JLabel();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -46,11 +59,16 @@ public class DailyEvents extends javax.swing.JFrame {
         });
         getContentPane().add(saveButtonFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 80, 40));
 
-        fileScrollPane.setBorder(null);
-        getContentPane().add(fileScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 750, 300));
+        dailyEventsScrollPane.setBorder(null);
 
-        fileBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Daily Events Background.png"))); // NOI18N
-        getContentPane().add(fileBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 400));
+        dailyEventsTextArea.setColumns(20);
+        dailyEventsTextArea.setRows(5);
+        dailyEventsScrollPane.setViewportView(dailyEventsTextArea);
+
+        getContentPane().add(dailyEventsScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 750, 300));
+
+        dailyEventsBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Daily Events Background.png"))); // NOI18N
+        getContentPane().add(dailyEventsBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 400));
 
         pack();
         setLocationRelativeTo(null);
@@ -77,8 +95,9 @@ public class DailyEvents extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify                     
-    private javax.swing.JLabel fileBackground;
-    private javax.swing.JScrollPane fileScrollPane;
+    private javax.swing.JLabel dailyEventsBackground;
+    private javax.swing.JScrollPane dailyEventsScrollPane;
+    private javax.swing.JTextArea dailyEventsTextArea;
     private javax.swing.JLabel saveButtonFile;
     // End of variables declaration                   
 }
