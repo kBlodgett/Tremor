@@ -209,4 +209,20 @@ public class Tremor
             //return StudentName2.compareTo(StudentName1);
         }
     };
+    
+    public static Comparator<Tremor> TremorTimeComparator = new Comparator<Tremor>() 
+    {
+        @Override
+        public int compare(Tremor t1, Tremor t2) 
+        {
+            String Tremor1 = t1.startTime().toUpperCase();
+            String Tremor2 = t2.startTime().toUpperCase();
+
+            //ascending order
+            return Tremor1.compareTo(Tremor2);
+
+            //descending order
+            //return StudentName2.compareTo(StudentName1);
+        }
+    };
 }
