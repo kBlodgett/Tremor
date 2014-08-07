@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -15,12 +16,17 @@ import javax.swing.JOptionPane;
 public class Events extends javax.swing.JFrame {
 
     List<Tremor> tremList;
+    Sort sort;
     /**
-     * Creates new form Events
+     * Creates new form SortGUI
      */
-    public Events(List trems) {
-        tremList = trems;
+    public Events(Sort sortPass) {
         initComponents();
+        sort = sortPass;
+        
+        sortText = new JTextArea();
+        sortText.setText(sort.sortSrt());
+        fileScrollPane.setViewportView(sortText);
     }
 
     /**
@@ -33,12 +39,23 @@ public class Events extends javax.swing.JFrame {
     private void initComponents() {
 
         fileScrollPane = new javax.swing.JScrollPane();
+        sortText = new javax.swing.JTextArea();
         saveButtonFile = new javax.swing.JLabel();
+        dateButton = new javax.swing.JLabel();
+        hrButton = new javax.swing.JLabel();
+        movementButton = new javax.swing.JLabel();
+        lengthButton = new javax.swing.JLabel();
         fileBackground = new javax.swing.JLabel();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         fileScrollPane.setBorder(null);
+
+        sortText.setColumns(20);
+        sortText.setRows(5);
+        fileScrollPane.setViewportView(sortText);
+
         getContentPane().add(fileScrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 750, 300));
 
         saveButtonFile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Save Button.png"))); // NOI18N
@@ -49,17 +66,49 @@ public class Events extends javax.swing.JFrame {
         });
         getContentPane().add(saveButtonFile, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 80, 40));
 
-        fileBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Events Background.png"))); // NOI18N
-        getContentPane().add(fileBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 400));
+        dateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Date Button.png"))); // NOI18N
+        dateButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dateButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(dateButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, -1, 40));
 
-        pack();
+        hrButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/HR Button.png"))); // NOI18N
+        hrButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hrButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(hrButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 40, -1, 40));
+
+        movementButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Movement Button.png"))); // NOI18N
+        movementButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                movementButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(movementButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 40, -1, 40));
+
+        lengthButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Length Button.png"))); // NOI18N
+        lengthButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lengthButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lengthButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 40, -1, 40));
+
+        fileBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Events - Background.png"))); // NOI18N
+        getContentPane().add(fileBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 420));
+
+        setSize(new java.awt.Dimension(820, 440));
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
     private void saveButtonFileMouseClicked(java.awt.event.MouseEvent evt) {                                            
         PrintWriter writer;
         try {
-            writer = new PrintWriter(new FileWriter("Events.csv"));
+            writer = new PrintWriter(new FileWriter("Sort.csv"));
             writer.println("Date, Time, Max HR, Max Vector Magnitude, Length");
             for(int i =0; tremList.size()>i; i++)
             {
@@ -71,13 +120,51 @@ public class Events extends javax.swing.JFrame {
             Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
         }
         JOptionPane optionPane = new JOptionPane();
-        optionPane.showMessageDialog(null, "File has been saved to NetBeans project folder", "File Saved", 1);        // TODO add your handling code here:
+        optionPane.showMessageDialog(null, "File has been saved to NetBeans project folder", "File Saved", 1);
+
     }                                           
+
+    private void dateButtonMouseClicked(java.awt.event.MouseEvent evt) {                                        
+        tremList = sort.dateTime();
+        sortText = new JTextArea();
+        sort.print();
+        sortText.setText(sort.sortSrt());
+        fileScrollPane.setViewportView(sortText);
+    }                                       
+
+    private void hrButtonMouseClicked(java.awt.event.MouseEvent evt) {                                      
+       tremList = sort.heartRate();
+       sortText = new JTextArea();
+       sort.print();
+       sortText.setText(sort.sortSrt());
+       fileScrollPane.setViewportView(sortText);
+    }                                     
+
+    private void movementButtonMouseClicked(java.awt.event.MouseEvent evt) {                                            
+       tremList = sort.vectorMag();
+       sortText = new JTextArea();
+       sort.print();
+       sortText.setText(sort.sortSrt());
+       fileScrollPane.setViewportView(sortText);
+    }                                           
+
+    private void lengthButtonMouseClicked(java.awt.event.MouseEvent evt) {                                          
+       tremList = sort.length();
+       sort.print();
+       sortText = new JTextArea();
+       sortText.setText(sort.sortSrt());
+       fileScrollPane.setViewportView(sortText);
+    }                                         
 
 
     // Variables declaration - do not modify                     
+    private javax.swing.JLabel dateButton;
     private javax.swing.JLabel fileBackground;
     private javax.swing.JScrollPane fileScrollPane;
+    private javax.swing.JLabel hrButton;
+    private javax.swing.JLabel lengthButton;
+    private javax.swing.JLabel movementButton;
     private javax.swing.JLabel saveButtonFile;
+    private javax.swing.JTextArea sortText;
     // End of variables declaration                   
 }
