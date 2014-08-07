@@ -1,4 +1,4 @@
-package tremornetbeans;
+package tremornetbeans;//
 
 /**
  * Driver: Make a program to record and differentiate between tremors and everyday life using data from a movement device. 
