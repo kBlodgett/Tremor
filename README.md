@@ -1,20 +1,20 @@
 Tremor
 ======
-PROJECT TITLE: Tremor
+PROJECT TITLE: IDIOM Tremor Tracking
 
 PURPOSE OF PROJECT:
 Make a program to record and differentiate between tremors and everyday life using data from a movement device. 
+Presents averages to the user in different ways and has sort and save features.
 
-VERSION or DATE: v1.0 (7/17/2014)
+VERSION or DATE: v1.0 (8/13/2014)
 
 HOW TO START THIS PROJECT:
-Use the driver class to start.
+Use the Jar file located in the dist folder. 
 
 AUTHORS: 
-Kirjsten Blodgett & Jonathan Zhu
+Kirjsten Blodgett, Galina Erikson, and Jonathan Zhu
 
 
 USER INSTRUCTIONS:
-Be sure to put the file into the file location of the project. 
-It will not be able to read it unless you type the full file location.
-(I used BlueJ to create/compile, Language is Java)
+Look to help menu in program.
+(Created with NetBeans, Java Language)
