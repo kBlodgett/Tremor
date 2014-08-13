@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -27,6 +28,7 @@ public class Statistics extends javax.swing.JFrame {
         
         statsTextArea = new JTextArea();
         statsTextArea.setText(meanPrint);
+        statsTextArea.setCaretPosition(0);
         fileScrollPane.setViewportView(statsTextArea);
 
         
@@ -48,6 +50,7 @@ public class Statistics extends javax.swing.JFrame {
         saveButtonFile = new javax.swing.JLabel();
         fileBackground = new javax.swing.JLabel();
 
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         fileScrollPane.setBorder(null);
@@ -75,14 +78,17 @@ public class Statistics extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     private void saveButtonFileMouseClicked(java.awt.event.MouseEvent evt) {                                            
-        try {
-            PrintWriter writer = new PrintWriter( new FileWriter("Statistics.csv"));
+        try {JFileChooser chooser = new JFileChooser();
+            chooser.showSaveDialog(null);
+            java.io.File f = chooser.getSelectedFile();
+            String filename = f.getAbsolutePath();
+            PrintWriter writer =new PrintWriter(new FileWriter(filename+".csv"));
             writer.println(meanPrint);
             writer.close();
         } catch (IOException ex) {
             Logger.getLogger(Statistics.class.getName()).log(Level.SEVERE, null, ex);
         }
-        JOptionPane.showMessageDialog(null, "File has been saved to the NetBeans Project folder", "File Saved",1);
+        JOptionPane.showMessageDialog(null, "File has been saved.", "File Saved",1);
     }                                           
 
 
