@@ -5,7 +5,7 @@ package tremornetbeans;
  * All the methods/actions for movement device
  * 
  * @author Kirjsten Blodgett 
- * @version 1.0
+ * @version 2.0
  * email: catsanddogskb@hotmail.com
  */
 public class DataPerMin
