@@ -1,5 +1,7 @@
 package tremornetbeans;
 
+import java.util.Comparator;
+
 /**
  *
  * @author Kirjsten Blodgett
@@ -126,5 +128,20 @@ public class TremorDays {
     {
         return minLength;
     }
-}
+    
+    public static Comparator<TremorDays> OverallDateComparator = new Comparator<TremorDays>() 
+    {
+        @Override
+        public int compare(TremorDays t1, TremorDays t2) 
+        {
+            String tDay1 = t1.date().toUpperCase();
+            String tDay2 = t2.date().toUpperCase();
 
+            //ascending order
+            return tDay1.compareTo(tDay2);
+
+            //descending order
+            //return StudentName2.compareTo(StudentName1);
+        }
+    };
+}
