@@ -104,21 +104,19 @@ public class LowHigh
         String meanString;
         meanString = ("Overall Statistics\n"
                 + "Lowest\n"
-                +"        HR: " + lowHR+"\n"
-                +"        Date:" + lowHRdate+"\n"
-                +"        Time:" + lowHRtime+"\n"
+                +"    HR: " + lowHR+"\n"
+                +"          Date:" + lowHRdate+"\n"
+                +"          Time:" + lowHRtime+"\n"
                 +"    Vector Magnitude: " + lowVec+"\n"
-                +"        Date:" + lowVecDate+"\n"
-                +"        Time:" + lowVecTime+"\n"
+                +"          Date:" + lowVecDate+"\n"
+                +"          Time:" + lowVecTime+"\n"
                 +"Highest\n" 
                 +"    HR: "+highHR+"\n"
-                +"        Date:" + highHRdate+"\n"
-                +"        Time:" + highHRtime+"\n"
+                +"          Date:" + highHRdate+"\n"
+                +"          Time:" + highHRtime+"\n"
                 +"    Vector Magnitude: " + highVec+"\n"
-                +"        Date:" + highVecDate+"\n"
-                +"        Time:" + highVecTime);
+                +"          Date:" + highVecDate+"\n"
+                +"          Time:" + highVecTime);
         return meanString;
     }
 }
-    
-  
