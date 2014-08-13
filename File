@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
@@ -29,6 +30,7 @@ public class File extends javax.swing.JFrame {
         
         fileTextArea = new JTextArea();
         fileTextArea.setText(dataPerMinString);
+        fileTextArea.setCaretPosition(0);
         fileScrollPane.setViewportView(fileTextArea);
     }
 
@@ -50,6 +52,7 @@ public class File extends javax.swing.JFrame {
         fileTextArea = new javax.swing.JTextArea();
         fileBackground = new javax.swing.JLabel();
 
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         saveButtonFile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Save Button.png"))); // NOI18N
@@ -78,7 +81,11 @@ public class File extends javax.swing.JFrame {
     private void saveButtonFileMouseClicked(java.awt.event.MouseEvent evt) {                                            
         PrintWriter writer;
         try {
-            writer = new PrintWriter(new FileWriter("File.csv"));
+            JFileChooser chooser = new JFileChooser();
+            chooser.showSaveDialog(null);
+            java.io.File f = chooser.getSelectedFile();
+            String filename = f.getAbsolutePath();
+            writer = new PrintWriter(new FileWriter(filename+".csv"));
             writer.println("Date, Time, Axis1, Axis2, Axis3, Steps, HR, Lux, Inclinometer Off, Inclinometer Stand, Inclinometer Sit, Inclinometer Lay, Vector Magnitude");
             for(int i =0; dataPerMinArray.size()>i; i++)
             {
@@ -90,7 +97,7 @@ public class File extends javax.swing.JFrame {
             Logger.getLogger(File.class.getName()).log(Level.SEVERE, null, ex);
         }
         JOptionPane optionPane = new JOptionPane();
-        optionPane.showMessageDialog(null, "File has been saved to NetBeans project folder", "File Saved", 1);
+        optionPane.showMessageDialog(null, "File has been saved.", "File Saved", 1);
         
         
     }                                           
