@@ -1,6 +1,8 @@
 package tremornetbeans;
 
+import java.awt.Cursor;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -14,7 +16,6 @@ public class Threshold extends javax.swing.JFrame {
     TremorEvaluation tremor;
     TremorCount tremCount;
     LowHigh lowHigh;
-    Threshold threshold;
     String tremListStr= "";
     /**
      * Creates new form Threshold
@@ -22,6 +23,7 @@ public class Threshold extends javax.swing.JFrame {
     public Threshold() {
         initComponents();
     }
+    
     public Threshold(List dataPerMin) {
         initComponents();
         dataPerMinArray = dataPerMin;
@@ -42,11 +44,17 @@ public class Threshold extends javax.swing.JFrame {
         enterButtonThreshold = new javax.swing.JLabel();
         thresholdBackground = new javax.swing.JLabel();
 
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         startHRText.setForeground(new java.awt.Color(153, 153, 153));
-        startHRText.setText("# # #");
+        startHRText.setText("120");
         startHRText.setBorder(null);
+        startHRText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                startHRTextMouseClicked(evt);
+            }
+        });
         startHRText.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startHRTextActionPerformed(evt);
@@ -55,13 +63,23 @@ public class Threshold extends javax.swing.JFrame {
         getContentPane().add(startHRText, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 170, 120, 30));
 
         endHRText.setForeground(new java.awt.Color(153, 153, 153));
-        endHRText.setText("# # #");
+        endHRText.setText("100");
         endHRText.setBorder(null);
+        endHRText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                endHRTextMouseClicked(evt);
+            }
+        });
         getContentPane().add(endHRText, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 230, 120, 30));
 
         vecText.setForeground(new java.awt.Color(153, 153, 153));
-        vecText.setText("# # # . #  #");
+        vecText.setText("5000.00");
         vecText.setBorder(null);
+        vecText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                vecTextMouseClicked(evt);
+            }
+        });
         getContentPane().add(vecText, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 290, 120, 30));
 
         enterButtonThreshold.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Enter Button.png"))); // NOI18N
@@ -80,7 +98,10 @@ public class Threshold extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     private void enterButtonThresholdMouseClicked(java.awt.event.MouseEvent evt) {                                                  
-        tremor = new TremorEvaluation(dataPerMinArray, startHRText.getText(), endHRText.getText(), vecText.getText());
+        
+        tremor = new TremorEvaluation(dataPerMinArray, 
+        startHRText.getText(), endHRText.getText(), vecText.getText());
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         tremor.mins();
         tremList = tremor.tremList();
         lowHigh = new LowHigh(tremList);
@@ -91,8 +112,12 @@ public class Threshold extends javax.swing.JFrame {
         tremCount.tremPerDay();
         tremDays = tremCount.tremDays();
         dispose();
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        //JOptionPane.showMessageDialog(null, "Loading has finished.","Complete",1);
     }                                                 
 
+
+    
     /*
     * returns the mean statistics
     */
@@ -132,6 +157,18 @@ public class Threshold extends javax.swing.JFrame {
     private void startHRTextActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
     }                                           
+
+    private void startHRTextMouseClicked(java.awt.event.MouseEvent evt) {                                         
+        startHRText.setText("");
+    }                                        
+
+    private void endHRTextMouseClicked(java.awt.event.MouseEvent evt) {                                       
+        endHRText.setText("");
+    }                                      
+
+    private void vecTextMouseClicked(java.awt.event.MouseEvent evt) {                                     
+        vecText.setText("");
+    }                                    
 
 
     // Variables declaration - do not modify                     
