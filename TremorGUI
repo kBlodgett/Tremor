@@ -1,12 +1,15 @@
- package tremornetbeans;
+package tremornetbeans;
 
+import java.awt.Cursor;
+import java.awt.Image;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,17 +20,36 @@ public class TremorGUI extends javax.swing.JFrame {
 
     ReadIn readIn = null;
     List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
-    Threshold threshold;
+    Threshold threshold = null;
     String dataPerMinString = "";
     String tremListStr="";
+    Overall overall;
     
     /**
      * Creates new form AppGUI
      */
     public TremorGUI() {
         initComponents();
+        changeIcon();
     }
 
+    public void changeIcon()
+    {
+        URL url = getClass().getResource("Icon.png");
+         if (url != null) {
+         ImageIcon icon = new ImageIcon(url);
+         Image image = icon.getImage();
+         this.setIconImage(image);
+    } else {
+        System.err.println("Couldn't find icon file");
+    }
+        
+        
+        
+        
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,6 +67,8 @@ public class TremorGUI extends javax.swing.JFrame {
         statisticsButton = new javax.swing.JLabel();
         formatText = new javax.swing.JTextField();
         helpButton = new javax.swing.JLabel();
+        clearButton = new javax.swing.JLabel();
+        overallButton = new javax.swing.JLabel();
         background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,7 +82,7 @@ public class TremorGUI extends javax.swing.JFrame {
                 enterButtonMouseClicked(evt);
             }
         });
-        getContentPane().add(enterButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 90, -1));
+        getContentPane().add(enterButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 120, -1, -1));
 
         fileNameCsv.setForeground(new java.awt.Color(153, 153, 153));
         fileNameCsv.setText("filename.csv");
@@ -81,7 +105,7 @@ public class TremorGUI extends javax.swing.JFrame {
                 fileButtonMouseClicked(evt);
             }
         });
-        getContentPane().add(fileButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 270, 60, 40));
+        getContentPane().add(fileButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 250, 60, 40));
 
         eventsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Events Button.png"))); // NOI18N
         eventsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -89,7 +113,7 @@ public class TremorGUI extends javax.swing.JFrame {
                 eventsButtonMouseClicked(evt);
             }
         });
-        getContentPane().add(eventsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 330, 80, 40));
+        getContentPane().add(eventsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 300, 80, 40));
 
         dailyEventsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Daily Events Button.png"))); // NOI18N
         dailyEventsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -97,7 +121,7 @@ public class TremorGUI extends javax.swing.JFrame {
                 dailyEventsButtonMouseClicked(evt);
             }
         });
-        getContentPane().add(dailyEventsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 390, 130, 50));
+        getContentPane().add(dailyEventsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 350, 130, 50));
 
         statisticsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Statistics Button.png"))); // NOI18N
         statisticsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -105,11 +129,16 @@ public class TremorGUI extends javax.swing.JFrame {
                 statisticsButtonMouseClicked(evt);
             }
         });
-        getContentPane().add(statisticsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 450, 100, 50));
+        getContentPane().add(statisticsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 450, 100, 50));
 
         formatText.setForeground(new java.awt.Color(153, 153, 153));
         formatText.setText("Format");
         formatText.setBorder(null);
+        formatText.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formatTextMouseClicked(evt);
+            }
+        });
         getContentPane().add(formatText, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 170, 100, 20));
 
         helpButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Help button.png"))); // NOI18N
@@ -119,6 +148,23 @@ public class TremorGUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(helpButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 10, 70, 40));
+
+        clearButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Clear Button.png"))); // NOI18N
+        clearButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(clearButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, -1, 40));
+
+        overallButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Overall Button.png"))); // NOI18N
+        overallButton.setText("Overall");
+        overallButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                overallButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(overallButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 400, 70, 50));
 
         background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/AppPackage/Main - Background.png"))); // NOI18N
         getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 520));
@@ -135,38 +181,62 @@ public class TremorGUI extends javax.swing.JFrame {
         if(readIn == null)
         {    
             JOptionPane.showMessageDialog(null, "Please enter in the file and format","File Needed",0);
-        } else
+        }else
         {    File file = new File(dataPerMinArray, dataPerMinString);
             file.setVisible(true);
         }
     }                                       
 
     private void enterButtonMouseClicked(java.awt.event.MouseEvent evt) {                                         
-       JOptionPane.showMessageDialog(null, "Note: File may take a few minutes to load. \n Close window to start loading", "Loading File", 1);
-        try {
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        Boolean option = false;
+        try{
             readIn = new ReadIn(fileNameCsv, formatText);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "File Not Found, Program Treminating","404",3);
+        }catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "File Not Found","404",0);
             Logger.getLogger(TremorGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        readIn.read();
-        dataPerMinArray = readIn.dataPerMinArray();
-        for(int i =0; dataPerMinArray.size()>i; i++)
-            {
-                DataPerMin dPM = dataPerMinArray.get(i);
-                dataPerMinString += (dPM.date()+"\t"+dPM.time()+"\t"+dPM.axis1()+"\t"+dPM.axis2()+"\t"+dPM.axis3()+"\t"+dPM.steps()+"\t"+dPM.HR()+"\t"+dPM.lux()+"\t"+dPM.iOff()+"\t\t"+dPM.iStand()+"\t\t"+dPM.iSit()+"\t\t"+dPM.iLay()+"\t\t"+dPM.vec()+"\n");
+        readIn.read();  
+        List dataPerMinArrayTemp = readIn.dataPerMinArray();
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        int response = JOptionPane.showConfirmDialog(null, "Do you want "
+                     + "to enter another file?", "Enter Multiple Files",
+                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (response == JOptionPane.YES_OPTION) {
+            option = true;
+            fileNameCsv.setText("Enter Next File Here");
+            formatText.setText("Format");
+        } else if(response == JOptionPane.NO_OPTION){
+            option = false;
+        }         
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        dataPerMinArray.addAll(dataPerMinArrayTemp);
+        if(option == false){
+            for(int i =0; dataPerMinArray.size()>i; i++){
+            DataPerMin dPM = dataPerMinArray.get(i);
+            dataPerMinString += (dPM.date()+"\t"+dPM.time()+"\t"+dPM.axis1()+"\t"+dPM.axis2()+"\t"
+                           +dPM.axis3()+"\t"+dPM.steps()+"\t"+dPM.HR()+"\t"+dPM.lux()+"\t"+dPM.iOff()
+                           +"\t\t"+dPM.iStand()+"\t\t"+dPM.iSit()+"\t\t"+dPM.iLay()+"\t\t"+dPM.vec()+"\n");
             }
-        threshold = new Threshold(readIn.dataPerMinArray());
-        threshold.setVisible(true);
+        }
+        if(option == false){
+            threshold = new Threshold(dataPerMinArray);
+            threshold.setVisible(true);
+        }
+        overall = new Overall(readIn.overallDataArray());
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }                                        
 
     private void dailyEventsButtonMouseClicked(java.awt.event.MouseEvent evt) {                                               
        if(readIn==null)
        {
            JOptionPane.showMessageDialog(null, "Please enter in the file and format","File Needed",0);
-       }else 
+       }else if(threshold == null)
        {
-            DailyEvents dailyEvents  = new DailyEvents(threshold.tremDays());
+           JOptionPane.showMessageDialog(null, "No Threshold Entered", "Threshold?", 0);
+       }else
+       {
+            DailyEvents dailyEvents  = new DailyEvents(threshold.tremDays(), readIn.overallDataArray());
             dailyEvents.setVisible(true);
        }
     }                                              
@@ -175,6 +245,9 @@ public class TremorGUI extends javax.swing.JFrame {
      if(readIn == null)
      {
          JOptionPane.showMessageDialog(null, "Please enter in the file and format","File Needed",0);
+     }else if(threshold == null)
+     {
+         JOptionPane.showMessageDialog(null, "No Threshold Entered", "Threshold?", 0);
      }else
      {    
          Statistics statistics = new Statistics(threshold.mean());
@@ -184,14 +257,21 @@ public class TremorGUI extends javax.swing.JFrame {
     }                                             
 
     private void fileNameCsvMouseClicked(java.awt.event.MouseEvent evt) {                                         
-        //new FileChooser().setVisible(true);
+       JFileChooser chooser = new JFileChooser();
+       chooser.showOpenDialog(null);
+        java.io.File f = chooser.getSelectedFile();
+       String filename = f.getAbsolutePath();
+       fileNameCsv.setText(filename);
     }                                        
 
     private void eventsButtonMouseClicked(java.awt.event.MouseEvent evt) {                                          
     if(readIn == null)
     {
         JOptionPane.showMessageDialog(null, "Please enter in the file and format","File Needed",0);
-    }else    
+    }else if(threshold == null)
+    {
+        JOptionPane.showMessageDialog(null, "No Threshold Entered", "Threshold?", 0);
+    }else
     {    
         Sort sort = new Sort(threshold.tremList());
         sort.print();
@@ -204,10 +284,25 @@ public class TremorGUI extends javax.swing.JFrame {
         new Help().setVisible(true);
     }                                       
 
+    private void clearButtonMouseClicked(java.awt.event.MouseEvent evt) {                                         
+       dataPerMinArray = new ArrayList<DataPerMin>();
+       fileNameCsv.setText("filename.csv");
+       formatText.setText("format");
+    }                                        
+
+    private void formatTextMouseClicked(java.awt.event.MouseEvent evt) {                                        
+        formatText.setText("");
+    }                                       
+
+    private void overallButtonMouseClicked(java.awt.event.MouseEvent evt) {                                           
+        overall.setVisible(true);
+    }                                          
+
 
 
     // Variables declaration - do not modify                     
     private javax.swing.JLabel background;
+    private javax.swing.JLabel clearButton;
     private javax.swing.JLabel dailyEventsButton;
     private javax.swing.JLabel enterButton;
     private javax.swing.JLabel eventsButton;
@@ -215,6 +310,7 @@ public class TremorGUI extends javax.swing.JFrame {
     private javax.swing.JTextField fileNameCsv;
     private javax.swing.JTextField formatText;
     private javax.swing.JLabel helpButton;
+    private javax.swing.JLabel overallButton;
     private javax.swing.JLabel statisticsButton;
     // End of variables declaration                   
 }
