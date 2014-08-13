@@ -78,9 +78,9 @@ public class TremorCount
      */
     private void printTremsPerDay()
     {
-        System.out.println("");
-        System.out.println("Tremors Per Day: Averages");
-        System.out.printf("%-15s %-15s %-10s %-10s %-10s %-25s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Min HR","Ave Vector Magnitude", "Max Vector Magnitude","Min Vector Magnitude", "Ave Length","Max Length","Min Length" );
+        //System.out.println("");
+        //System.out.println("Tremors Per Day: Averages");
+        //System.out.printf("%-15s %-15s %-10s %-10s %-10s %-25s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Min HR","Ave Vector Magnitude", "Max Vector Magnitude","Min Vector Magnitude", "Ave Length","Max Length","Min Length" );
         double total= 0.00, average=0.00, totalHR=0.00, totalVec=0.00, totalLength=0.00;
         int tremTotalCount=0;
         for(int i = 0; tremPerDay.size()>i; i++)
@@ -118,7 +118,7 @@ public class TremorCount
                 ArrayList<String> tremDay = new ArrayList<String>();
                 DecimalFormat  df = new DecimalFormat("0.00");
                 //               ("%-15s %-15s %-10s %-10s %-25s %-25s %-12s %-12s %-12s %n","# of Tremors", "Date", "Ave HR", "Max HR", "Ave Vector Magnitude", "Max Vector Magnitude", "Ave Length","Max Length","Min Length" )
-                System.out.printf("%-15s %-15s %-10s %-10s %-10s %-25s %-25s %-25s %-12s %-12s %-12s %n",temp.size(), date, df.format(tempHR), df.format(maxHR),df.format(minHR), df.format(tempVec), df.format(maxVec),df.format(minVec), df.format(tempLength), df.format(maxLength), df.format(minLength));
+                //System.out.printf("%-15s %-15s %-10s %-10s %-10s %-25s %-25s %-25s %-12s %-12s %-12s %n",temp.size(), date, df.format(tempHR), df.format(maxHR),df.format(minHR), df.format(tempVec), df.format(maxVec),df.format(minVec), df.format(tempLength), df.format(maxLength), df.format(minLength));
                 
                 tremTotalCount++;
                 String size = Integer.toString(temp.size());
@@ -140,11 +140,11 @@ public class TremorCount
             tempHR = 0; tempVec= 0; tempLength = 0;
             
         }
-        System.out.println("File Averages:");
-        if(total!=0){System.out.println("   Tremor: "+ (total/tremTotalCount));}
-        if(totalHR!=0){System.out.println("   Heartrate: " + (totalHR/tremTotalCount));}
-        if(totalVec!=0){System.out.println("   Vector Magnitude:" + (totalVec/tremTotalCount));}
-        if(totalLength!=0){System.out.println("   Length: " + (totalLength/tremTotalCount));}
+        //System.out.println("File Averages:");
+        //if(total!=0){System.out.println("   Tremor: "+ (total/tremTotalCount));}
+        //if(totalHR!=0){System.out.println("   Heartrate: " + (totalHR/tremTotalCount));}
+        //if(totalVec!=0){System.out.println("   Vector Magnitude:" + (totalVec/tremTotalCount));}
+        //if(totalLength!=0){System.out.println("   Length: " + (totalLength/tremTotalCount));}
         strTrem=(total/tremTotalCount); strHR =(totalHR/tremTotalCount); strVec=(totalVec/tremTotalCount); strLength = (totalLength/tremTotalCount);
     }
     
@@ -159,11 +159,11 @@ public class TremorCount
     
     public String mean()
     {
-        String meanStr = ("File Averages:\n"
-                + "   Tremor: "+ strTrem+"\n"
-                + "   Heartrate: " + strHR+"\n"
-                + "   Vector Magnitude:"+ strVec+"\n"
-                + "   Length: " + strLength);
+        String meanStr = ("File Averages\n"
+                + "     Tremor: "+ strTrem+"\n"
+                + "     Heartrate: " + strHR+"\n"
+                + "     Vector Magnitude:"+ strVec+"\n"
+                + "     Length: " + strLength);
         return meanStr;
     }
 
