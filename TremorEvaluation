@@ -9,8 +9,9 @@ package tremornetbeans;
  * @version 1.0
  * email: catsanddogskb@hotmail.com
  */
-import java.util.*;
 import java.text.DecimalFormat;
+import java.util.*;
+import javax.swing.JOptionPane;
 public class TremorEvaluation
 {
     // instance variables - replace the example below with your own
@@ -35,9 +36,16 @@ public class TremorEvaluation
     public TremorEvaluation(List tremors, String start, String end, String vec)
     {
         dataPerMinArray = tremors;
-        inputStart = Integer.parseInt(start);
-        inputEnd = Integer.parseInt(end);
-        vecInput = Double.parseDouble(vec);
+        try
+        {
+            inputStart = Integer.parseInt(start);
+            inputEnd = Integer.parseInt(end);
+            vecInput = Double.parseDouble(vec);
+        }catch(NumberFormatException nfe)
+        {
+            JOptionPane.showMessageDialog(null, "Threshold values invalid. Clear and enter file to try again","Invalid Entry",0);
+            System.exit(0);
+        }
     }
    
     
@@ -110,7 +118,7 @@ public class TremorEvaluation
                  duringTrems.add(dataPerMinArray.get(i));
                  count++;
             }
-            if(dataPerMinArray.get(i).HR()<inputEnd)
+            if(dataPerMinArray.get(i).HR()<inputEnd || dataPerMinArray.get(i).vec()<1000)
             {
                 tremmors.add(duringTrems);
                 count = 0;
@@ -185,7 +193,7 @@ public class TremorEvaluation
                  {  
                      if(format == 2) 
                         {   Tremor tremor = new Tremor(date, startTime, endTime, maxHR, maxVec, (count/60.00), format);
-                           if(count>30){tremList.add(tremor);}
+                           if(count>5){tremList.add(tremor);}
                         }
 
                     if(format == 1)
@@ -201,7 +209,7 @@ public class TremorEvaluation
                      Tremor tremPrint = (Tremor)tremList.get(tremList.size()-1);
                         if(tremPrint.format() == 2)
                         {   Tremor tempTremor = new Tremor(tremPrint.date(), startTime, endTime, tremPrint.maxHR(), tremPrint.maxVec(), (count/60.00), tremPrint.format());
-                            if(count>30){tremList.set(tremList.size()-1, tempTremor);}
+                            if(count>5){tremList.set(tremList.size()-1, tempTremor);}
                         }
                     
                         if(tremPrint.format() == 1)
@@ -241,7 +249,7 @@ public class TremorEvaluation
      */
     public void meanPrint()
     {
-        System.out.println("Mean:");
+        System.out.println("Mean");
         System.out.println("    HR: " + meanHR);
         System.out.println("    Vector Magnitude: " + meanVec);
         
@@ -258,12 +266,12 @@ public class TremorEvaluation
     }
     
     /**
-     * retuns mean
+     * returns mean
      * @return meanStr
      */
     public String meanStr() 
     {
-        String meanStr = ("Mean:\n"
+        String meanStr = ("Mean\n"
                 + "    HR: " + meanHR+"\n"
                 + "    Vector Magnitude: " + meanVec);
         return meanStr;
