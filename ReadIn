@@ -10,10 +10,11 @@ package tremornetbeans;
 import java.awt.TextField;
 import java.io.*;
 import java.lang.Math;
+import java.text.ParseException;
 import java.util.*;
 import java.util.Scanner;
-import javax.swing.JTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 public class ReadIn   
 {
     private int format = 0;
@@ -21,13 +22,14 @@ public class ReadIn
     private Scanner keyboard = new Scanner(System.in);
     private PrintWriter writer = new PrintWriter( new FileWriter("tremorData.csv"));
     private List<DataPerMin>  dataPerMinArray = new ArrayList<DataPerMin>();
+    private List<OverallData> overallDataArray = new ArrayList<OverallData>();
     
    /**
      * Constructor for original
      */
     public ReadIn() throws IOException
     {
-        String input;
+        String input="";
             try{
                     System.out.println("Enter file location and name");
                     System.out.println("OR drag file in tremor program folder and enter (NAME).(FILETYPE)");
@@ -36,9 +38,8 @@ public class ReadIn
                 }catch(IOException e)
                 {
                     System.out.println("File was not found, Ending Program");
-                    JOptionPane.showMessageDialog(null,"File Not Found, Program Terminating","404",3);
+                    JOptionPane.showMessageDialog(null,"File Not Found","404",3);
                     //String delay = keyboard.next();
-                    System.exit(0);
                 }
     }
     
@@ -49,20 +50,28 @@ public class ReadIn
     public ReadIn(JTextField field, JTextField formatField) throws IOException
     {
         String input;
-        format = Integer.parseInt(formatField.getText());
+        String temp = formatField.getText();
+        if(temp.equalsIgnoreCase("1") ||temp.equalsIgnoreCase("2")||
+                temp.equalsIgnoreCase("3")||temp.equalsIgnoreCase("4"))
+        {
+            format = Integer.parseInt(temp);
+        }else
+        {
+            JOptionPane.showMessageDialog(null, "Format entered does not exist, enter numbers 1-4","Format Error", 0);
+        }
+        
             try{
-                    System.out.println("Enter file location and name");
-                    System.out.println("OR drag file in tremor program folder and enter (NAME).(FILETYPE)");
+                    //System.out.println("Enter file location and name");
+                    //System.out.println("OR drag file in tremor program folder and enter (NAME).(FILETYPE)");
                     //input = keyboard.nextLine();
                     reader = new Scanner(new FileReader(field.getText()));
                 }catch(IOException e)
                 {
-                    System.out.println("File was not found, Ending Program");
-                    JOptionPane.showMessageDialog(null, "File Not Found, Program Terminating", "404", 0);
+                    //System.out.println("File was not found, Ending Program");
+                    JOptionPane.showMessageDialog(null, "File Not Found", "404", 0);
                     //String delay = keyboard.next();
-                    System.exit(0);
                 }
-            System.out.println("Variables have been initialized, format"+format);
+            //System.out.println("Variables have been initialized, format"+format);
     }
 
     /**
@@ -71,63 +80,30 @@ public class ReadIn
     public void read()
     {
         String ans = "yes";
-        /**
-        do
-        {   System.out.println("Is the file in Mins or Secs? (1 - Mins, 2 - Secs)");
-            format = keyboard.nextInt();
-        }while(format != 1 && format != 2);
-        */
-        if(format == 0)
-        {   System.out.println("Would you like to see the raw data from the file?");
-            ans = keyboard.next();
-            System.out.println("File Time format? (1 - mins(With Vec Mag)     2 - secs(No Vec Mag)      3 - mins(No Vec Mag)     4 - secs(With Vec Mag))");
-            format=keyboard.nextInt();
-            System.out.println("Loading Please Wait. Restart program if it takes longer than a minutre.\nIf BlueJ keeps frezing then open using cmd (Run batch file titled run)");
-        }
-        /**for(int i=0; 13>i;i++)
-        {
-            if(reader.next().equalsIgnoreCase("date"))
-            {
-                format = 1;
-            }else format = 2;
-        }
-        */
         if(format == 1)
-        {    if(ans.equalsIgnoreCase("yes"))
-            {   printHeader();
-                writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
-            }            
+        {      //printHeader();
+                writer.println("Date, - , Time, HR, - , Time, Vector-Mag");        
             readInMinutes(ans, format);
         }
         if(format == 2)
         {
-             if(ans.equalsIgnoreCase("yes"))
-            {   printHeader();
+                //printHeader();
                 writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
-            }
             readInSeconds(ans, format);
         }
         if(format == 3)
         {
-             if(ans.equalsIgnoreCase("yes"))
-            {   printHeader();
-                writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
-            }            
+                //printHeader();
+                writer.println("Date, - , Time, HR, - , Time, Vector-Mag");   
             altReadInMinutes(ans);
         }
         if(format == 4)
         {
-            if(ans.equalsIgnoreCase("yes"))
-            {   printHeader();
+                //printHeader();
                 writer.println("Date, - , Time, HR, - , Time, Vector-Mag");
-            }
             altReadInSeconds(ans);
         }
-        if(format == 0)
-        {
-            System.out.println("File set-up format was not initialized. Terminating");
-            System.exit(0);
-        }
+
         
         
     }
@@ -156,7 +132,11 @@ public class ReadIn
         hour = Integer.parseInt(timeArray[0]);
         min = Integer.parseInt(timeArray[1]);
         sec = Integer.parseInt(timeArray[2]);
-
+        
+        double maxHR=0, minHR=999, meanHR=0, maxVec=0, minVec=999999, meanVec=0;
+        int count = 0, starterCount = 0;
+        String dateComp = "";
+        
         for(int i = 0; i <= 4; i++)
         {
             reader.nextLine();
@@ -188,13 +168,34 @@ public class ReadIn
             int y = Integer.parseInt(axis1), x = Integer.parseInt(axis2), z = Integer.parseInt(axis3);
             vec = Math.sqrt((x*x)+(y*y)+(z*z));
             
-            if(HR !=0 && vec !=0 && !iOff.equalsIgnoreCase("1"))
+            if(starterCount == 0){dateComp = date;}
+            ++starterCount;
+            if(dateComp.equalsIgnoreCase(date))
+            {
+                if(HR != 0 && vec != 0)
+                {   ++count;
+                    if(minHR>HR){minHR = HR;}
+                    if(maxHR<HR){maxHR = HR;}
+                    if(minVec>vec){minVec = vec;}
+                    if(maxVec<vec){maxVec = vec;}
+                    meanHR+=HR; meanVec+=vec;      
+                }
+            }else 
+            {
+                if(HR != 0 || vec != 0) 
+                {   meanHR = meanHR/count; meanVec = meanVec/count;
+                    count = 0;
+                    OverallData overallData = new OverallData(date, maxHR, minHR, meanHR, maxVec, minVec, meanVec);
+                    overallDataArray.add(overallData);
+                    maxHR=0; minHR=999; meanHR=0; maxVec=0; minVec=999999; meanVec=0;
+                    dateComp = date;
+                }
+            }
+            
+            if(HR !=0 && vec !=0)
             {   writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
                 DataPerMin dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec, 1);
                 dataPerMinArray.add(dataPerMin);
-            
-                if(ans.equalsIgnoreCase("yes"))
-                {print(dataPerMin);}
             }
         }
         reader.close();
@@ -213,10 +214,13 @@ public class ReadIn
             reader.nextLine();
         }
         String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay;
-        int HR;
+        double maxHR=0, minHR=999, meanHR=0, maxVec=0, minVec=999999, meanVec=0;
+        int HR, count = 0, starterCount = 0;
         double vec;
+        String dateComp = "";
         while(reader.hasNextLine())
         {
+            
             String input = reader.nextLine();
             String[] textArray = input.split("[, ]+");
             
@@ -237,13 +241,38 @@ public class ReadIn
             {iLay = textArray[11];}else iLay = "N/A";
             if(textArray.length>12)
             {vec = Double.parseDouble(textArray[12]);} else vec=0;
+            
+            if(starterCount == 0){dateComp = date;}
+            ++starterCount;
+            if(dateComp.equalsIgnoreCase(date))
+            {
+                if(HR != 0 || vec != 0)
+                {   ++count;
+                    if(minHR>HR){minHR = HR;}
+                    if(maxHR<HR){maxHR = HR;}
+                    if(minVec>vec){minVec = vec;}
+                    if(maxVec<vec){maxVec = vec;}
+                    meanHR+=HR; meanVec+=vec;      
+                }
+            }else 
+            {
+                if(HR != 0 || vec != 0)
+                {   meanHR = meanHR/count; meanVec = meanVec/count;
+                    count = 0;
+                    OverallData overallData = new OverallData(date, maxHR, minHR, meanHR, maxVec, minVec, meanVec);
+                    overallDataArray.add(overallData);
+                    maxHR=0; minHR=999; meanHR=0; maxVec=0; minVec=999999; meanVec=0;
+                    dateComp = date;
+                }
+            }
+            
 
                 writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
                 DataPerMin dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec, format);
                 dataPerMinArray.add(dataPerMin);
             
-            if(ans.equalsIgnoreCase("yes"))
-            {print(dataPerMin);}
+            //if(ans.equalsIgnoreCase("yes"))
+            //{print(dataPerMin);}
         }
         reader.close();
         writer.close();
@@ -255,13 +284,15 @@ public class ReadIn
      */
     public void altReadInSeconds(String ans)
     {
-        for(int i = 0; i < 13; i++)
+        for(int i = 0; i < 14; i++)
         {
             reader.nextLine();
         }
         String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay;
-        int HR;
+        double maxHR=0, minHR=999, meanHR=0, maxVec=0, minVec=999999, meanVec=0;
+        int HR, count =0, starterCount = 0;
         double vec;
+        String dateComp="";
         while(reader.hasNextLine())
         {
             String input = reader.nextLine();
@@ -285,14 +316,40 @@ public class ReadIn
             int y = Integer.parseInt(axis1)*60, x = Integer.parseInt(axis2)*60, z = Integer.parseInt(axis3)*60;
             vec = Math.sqrt((x*x)+(y*y)+(z*z));
             
+            
+            if(starterCount == 0){dateComp = date;}
+            ++starterCount;
+            if(dateComp.equalsIgnoreCase(date))
+            {
+                if(HR != 0 || vec != 0)
+                {   ++count;
+                    if(minHR>HR){minHR = HR;}
+                    if(maxHR<HR){maxHR = HR;}
+                    if(minVec>vec){minVec = vec;}
+                    if(maxVec<vec){maxVec = vec;}
+                    meanHR+=HR; meanVec+=vec;      
+                }
+            }else 
+            {
+                if(HR != 0 || vec != 0)
+                {   meanHR = meanHR/count; meanVec = meanVec/count;
+                    count = 0;
+                    OverallData overallData = new OverallData(date, maxHR, minHR, meanHR, maxVec, minVec, meanVec);
+                    overallDataArray.add(overallData);
+                    maxHR=0; minHR=999; meanHR=0; maxVec=0; minVec=999999; meanVec=0;
+                    dateComp = date;
+                }
+            }
+            
+            
             DataPerMin dataPerMin = null;
-            if(HR !=0 && vec !=0 && !iOff.equalsIgnoreCase("1"))
+            if(HR !=0 && vec !=0)
             {   writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
                 dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec, 2);
                 dataPerMinArray.add(dataPerMin);
             }
-            if(ans.equalsIgnoreCase("yes"))
-            {print(dataPerMin);}
+            //if(ans.equalsIgnoreCase("yes"))
+            //{print(dataPerMin);}
         }
         reader.close();
         writer.close();
@@ -310,8 +367,10 @@ public class ReadIn
         }
         String date, time, axis1, axis2, axis3, steps, lux, iOff, iStand, iSit, iLay;
         int HR, sec = 00, min = 00, hour = 00, month = 00, day =00, year =00;
+        double maxHR=0, minHR=999, meanHR=0, maxVec=0, minVec=999999, meanVec=0;
         double vec;
-        String dateStr, timeStr;
+        int count =0, starterCount = 0;
+        String dateStr, timeStr, dateComp="";
         //reverse back before using again (NOTE TO PROGRAMMER!!!!!!!) (time and date str to be reversed)
         reader.next();reader.next();dateStr = reader.next();timeStr = reader.next();reader.nextLine(); //reader.nextLine();
         reader.next();reader.next();timeStr = reader.next();
@@ -356,12 +415,37 @@ public class ReadIn
             int y = Integer.parseInt(axis1), x = Integer.parseInt(axis2), z = Integer.parseInt(axis3);
             vec = Math.sqrt((x*x)+(y*y)+(z*z));
             
-            if(HR !=0 && vec !=0 && !iOff.equalsIgnoreCase("1"))
+            
+            
+            if(starterCount == 0){dateComp = date;}
+            ++starterCount;
+            if(dateComp.equalsIgnoreCase(date))
+            {
+                if(HR != 0 || vec != 0)
+                {   ++count;
+                    if(minHR>HR){minHR = HR;}
+                    if(maxHR<HR){maxHR = HR;}
+                    if(minVec>vec){minVec = vec;}
+                    if(maxVec<vec){maxVec = vec;}
+                    meanHR+=HR; meanVec+=vec;      
+                }
+            }else 
+            {
+                if(HR !=0 || vec !=0)
+                {   meanHR = meanHR/count; meanVec = meanVec/count;
+                    count = 0;
+                    OverallData overallData = new OverallData(date, maxHR, minHR, meanHR, maxVec, minVec, meanVec);
+                    overallDataArray.add(overallData);
+                    System.out.println(date);
+                    maxHR=0; minHR=999; meanHR=0; maxVec=0; minVec=999999; meanVec=0;
+                    dateComp = date;
+                }
+            }
+            
+            if(HR !=0 && vec !=0)
             {   writer.println(date + ", - ," + time + "," +  HR + ", - ,"+ time + "," + vec);
                 DataPerMin dataPerMin = new DataPerMin(date, time, axis1, axis2, axis3, steps, HR, lux, iOff, iStand, iSit, iLay, vec, format);
                 dataPerMinArray.add(dataPerMin);
-                if(ans.equalsIgnoreCase("yes"))
-                {print(dataPerMin);}
             }
         }
         reader.close();
@@ -369,27 +453,13 @@ public class ReadIn
         
     }
     
-    /**
-     * prints out object created in read()
-     * 
-     * @param o
-     */
-    public void print(DataPerMin o)
-    {
-        
-        //if(o!=null)
-        System.out.printf("%-10s %-10s %-5s %-5s %-5s %-5s %-5s %-5s %-12s %-12s %-12s %-12s %-8s %n", o.date(), o.time(), o.axis1(), o.axis2(), o.axis3(), o.steps(), o.HR(), o.lux(), o.iOff(), o.iStand(), o.iSit(), o.iLay(), o.vec());
-       
-    }
+
     
-    /**
-     * 
-     */
-    public void printHeader()
-    {
-        System.out.printf("%-10s %-10s %-5s %-5s %-5s %-5s %-5s %-5s %-12s %-12s %-12s %-12s %-8s %n","Date", "Time", "Axis1", "Axis2", "Axis3", "Steps", "HR", "Lux", "Inc-Off", "Inc-Stand", "Inc-Sit", "Inclin-Lying", "Vector");
-    }
-    
+   public List overallDataArray() 
+   {
+       return this.overallDataArray;
+   }
+   
     /**
      * Returns the filtered array to the driver (filtered to take out data that are outliers or not applicable)
      */
