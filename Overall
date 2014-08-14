@@ -110,7 +110,7 @@ public class Overall extends javax.swing.JFrame {
 
 
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify                      
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel overallBackground;
     private javax.swing.JScrollPane overallScrollPane;
