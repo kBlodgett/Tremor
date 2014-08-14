@@ -156,7 +156,7 @@ public class Tremor
     /**
      * returns format of the file
      *  1 = mins
-     *  2 = secs
+     *  2 = secs 
      *  @return format
      */
     public int format()
