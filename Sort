@@ -1,7 +1,5 @@
 package tremornetbeans;
 
-package tremornetbeans;
-
 /**
  * Sort: Sorts out tremor data by either heart-rate, vector magnitude, or date
  * Please note that data already comes pre-sorted in date/time order.
