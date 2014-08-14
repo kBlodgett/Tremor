@@ -92,7 +92,7 @@ public class Statistics extends javax.swing.JFrame {
     }                                           
 
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify                      
     private javax.swing.JLabel fileBackground;
     private javax.swing.JScrollPane fileScrollPane;
     private javax.swing.JLabel saveButtonFile;
