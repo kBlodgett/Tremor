@@ -157,5 +157,5 @@ public class DailyEvents extends javax.swing.JFrame {
     private javax.swing.JScrollPane dailyEventsScrollPane;
     private javax.swing.JTextArea dailyEventsTextArea;
     private javax.swing.JLabel saveButtonFile;
-    // End of variables declaration                   
+    // End of variables declaration.                
 }
