@@ -52,7 +52,7 @@ public class OverallData {
     {
         return minVec;
     }
-    
+     
     public double meanVec()
     {
         return meanVec;
